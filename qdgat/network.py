@@ -141,12 +141,9 @@ class QDGATNet(nn.Module):
                 metadata: List[Dict[str, Any]] = None) -> Dict[str, torch.Tensor]:
 
         outputs = self.bert(input_ids, attention_mask=input_mask, token_type_ids=input_segments)
-        sequence_output = outputs[0]
+        sequence_output = outputs.last_hidden_state
 
-        print(type(outputs))
-        print(outputs[2].shape)
-
-        sequence_output_list = [ item for item in outputs[2][-4:] ]
+        sequence_output_list = [ item for item in outputs.hidden_states[-4:] ]
 
         batch_size = input_ids.size(0)
         if ("passage_span_extraction" in self.answering_abilities or "question_span" in self.answering_abilities) and self.use_gcn:

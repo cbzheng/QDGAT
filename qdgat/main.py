@@ -31,7 +31,7 @@ class NumpyEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 def build_network(args):
-    bert_model = RobertaModel.from_pretrained(args.roberta_model)
+    bert_model = RobertaModel.from_pretrained(args.roberta_model, output_hidden_states=True)
     network = QDGATNet(bert_model,
                     hidden_size=bert_model.config.hidden_size,
                     dropout_prob=args.dropout)
