@@ -11,7 +11,7 @@ class Token(OToken):
         dep_: str = None,
         ent_type_: str = None,
         text_id: int = None,
-        edx: int = Nones):
+        edx: int = None):
         
         super().__init__(text, idx, lemma_, pos_, tag_, dep_, ent_type_, text_id)
         self.edx = edx
