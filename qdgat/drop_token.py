@@ -12,6 +12,14 @@ class Token(OToken):
         text_id: int = None,
         edx: int = None
     ):
-        self = super(Token, cls).__new__(cls, text, idx, lemma_, pos_, tag_, dep_, ent_type_, text_id)
+        self = super(Token, cls).__new__(cls)
+        self.text = text
+        self.idx = idx
+        self.lemma_ = lemma_
+        self.pos_ = pos_
+        self.tag_ = tag_
+        self.dep_ = dep_
+        self.ent_type_ = ent_type_
+        self.text_id =  text_id
         self.edx = edx
         return self
