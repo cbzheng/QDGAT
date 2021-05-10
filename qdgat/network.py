@@ -142,6 +142,10 @@ class QDGATNet(nn.Module):
 
         outputs = self.bert(input_ids, attention_mask=input_mask, token_type_ids=input_segments)
         sequence_output = outputs[0]
+
+        print(type(outputs))
+        print(outputs[2].shape)
+
         sequence_output_list = [ item for item in outputs[2][-4:] ]
 
         batch_size = input_ids.size(0)
