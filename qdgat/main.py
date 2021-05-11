@@ -11,12 +11,13 @@ from utils import AverageMeter
 from datetime import datetime
 from optimizer import AdamW
 from utils import create_logger
-from transformers import RobertaTokenizer, RobertaModel
+from transformers import RobertaTokenizer, RobertaModel, AdamW, get_linear_schedule_with_warmup
 from torch.utils.data import DataLoader, RandomSampler
 from drop_dataloader import create_collate_fn
 
 
 logger = logging.getLogger()
+logging.basicConfig(level = logging.INFO)
 formatter = logging.Formatter(fmt='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S')
 ch = logging.StreamHandler(sys.stdout)
 ch.setLevel(logging.INFO)
@@ -120,12 +121,17 @@ def train(args, network, train_itr, dev_itr):
         {'params': [p for n, p in network.named_parameters() if not n.startswith("bert.")],
             "weight_decay": args.weight_decay, "lr": args.learning_rate}
     ]
-    optimizer = AdamW(optimizer_grouped_parameters,
-                    lr=args.learning_rate,
-                    warmup=args.warmup,
-                    t_total=num_train_steps,
-                    max_grad_norm=args.grad_clipping,
-                    schedule=args.warmup_schedule)
+
+    optimizer = AdamW(optimizer_grouped_parameters, lr=args.learning_rate)
+    scheduler = get_linear_schedule_with_warmup(
+        optimizer, num_warmup_steps=args.warmup*num_train_steps, num_training_steps=num_train_steps
+    )
+    # optimizer = AdamW(optimizer_grouped_parameters,
+    #                 lr=args.learning_rate,
+    #                 warmup=args.warmup,
+    #                 t_total=num_train_steps,
+    #                 max_grad_norm=args.grad_clipping,
+    #                 schedule=args.warmup_schedule)
 
     update_cnt, step = 0, 0
     train_start = datetime.now()
@@ -149,12 +155,13 @@ def train(args, network, train_itr, dev_itr):
             current_metrics['loss'] = output_dict["loss"]
             update_metrics(current_metrics)
 
+            # gradient clipping
+            torch.nn.utils.clip_grad_norm_(network.parameters(), args.grad_clipping)
+
             if (step+1) % args.gradient_accumulation_steps == 0:
                 optimizer.step()
                 optimizer.zero_grad()
                 update_cnt += 1
-
-
 
             if update_cnt % (args.log_per_updates * args.gradient_accumulation_steps) == 0 or update_cnt == 1:
                 logger.info("QDGAT train: step:{0:6} loss:{1:.5f} f1:{2:.5f} em:{3:.5f} left:{4}".format(
