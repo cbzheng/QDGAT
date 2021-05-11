@@ -279,7 +279,7 @@ def masked_softmax(vector: torch.Tensor,
             result = result * mask
             result = result / (result.sum(dim=dim, keepdim=True) + 1e-13)
         else:
-            masked_vector = vector.masked_fill((1 - mask.long()).byte(), mask_fill_value)
+            masked_vector = vector.masked_fill((1 - mask.long()).bool(), mask_fill_value)
             result = torch.nn.functional.softmax(masked_vector, dim=dim)
     return result
 
@@ -343,7 +343,7 @@ def masked_max(vector: torch.Tensor,
     -------
     A ``torch.Tensor`` of including the maximum values.
     """
-    one_minus_mask = (1.0 - mask).byte()
+    one_minus_mask = (1.0 - mask).bool()
     replaced_vector = vector.masked_fill(one_minus_mask, min_val)
     max_value, _ = replaced_vector.max(dim=dim, keepdim=keepdim)
     return max_value
@@ -374,7 +374,7 @@ def masked_mean(vector: torch.Tensor,
     -------
     A ``torch.Tensor`` of including the mean values.
     """
-    one_minus_mask = (1.0 - mask).byte()
+    one_minus_mask = (1.0 - mask).bool()
     replaced_vector = vector.masked_fill(one_minus_mask, 0.0)
 
     value_sum = torch.sum(replaced_vector, dim=dim, keepdim=keepdim)
@@ -520,7 +520,7 @@ def get_text_field_mask(text_field_tensors: Dict[str, torch.Tensor],
     NOTE: Our functions for generating masks create torch.LongTensors, because using
     torch.ByteTensors  makes it easy to run into overflow errors
     when doing mask manipulation, such as summing to get the lengths of sequences - see below.
-    >>> mask = torch.ones([260]).byte()
+    >>> mask = torch.ones([260]).bool()
     >>> mask.sum() # equals 260.
     >>> var_mask = torch.autograd.V(mask)
     >>> var_mask.sum() # equals 4, due to 8 bit precision - the sum overflows.
@@ -671,11 +671,11 @@ def replace_masked_values(tensor: torch.Tensor, mask: torch.Tensor, replace_with
 
     This just does ``tensor.masked_fill()``, except the pytorch method fills in things with a mask
     value of 1, where we want the opposite.  You can do this in your own code with
-    ``tensor.masked_fill((1 - mask).byte(), replace_with)``.
+    ``tensor.masked_fill((1 - mask).bool(), replace_with)``.
     """
     if tensor.dim() != mask.dim():
         raise ConfigurationError("tensor.dim() (%d) != mask.dim() (%d)" % (tensor.dim(), mask.dim()))
-    return tensor.masked_fill((1 - mask.long()).byte(), replace_with)
+    return tensor.masked_fill((1 - mask.long()).bool(), replace_with)
 
 
 def tensors_equal(tensor1: torch.Tensor, tensor2: torch.Tensor, tolerance: float = 1e-12) -> bool:

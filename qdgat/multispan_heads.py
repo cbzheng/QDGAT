@@ -341,17 +341,17 @@ class FlexibleLoss(MultiSpanHead):
 
         # get the relevant scores for the time step
         class_log_probabilities = state['log_probs'][:, state['step_num'][0], :]
-        is_wordpiece = (1 - state['wordpiece_mask'][:, state['step_num'][0]]).byte()
+        is_wordpiece = (1 - state['wordpiece_mask'][:, state['step_num'][0]]).bool()
 
         # mask illegal BIO transitions
         transitions_mask = torch.cat(
             (torch.ones_like(class_log_probabilities[:, :3]), torch.zeros_like(class_log_probabilities[:, -2:])),
-            dim=-1).byte()
-        transitions_mask[:, 2] &= ((last_predictions == 1) | (last_predictions == 2)).byte()
-        transitions_mask[:, 1:3] &= ((class_log_probabilities[:, :3] == 0.0).sum(-1) != 3).byte().unsqueeze(-1).repeat(1, 2)
+            dim=-1).bool()
+        transitions_mask[:, 2] &= ((last_predictions == 1) | (last_predictions == 2)).bool()
+        transitions_mask[:, 1:3] &= ((class_log_probabilities[:, :3] == 0.0).sum(-1) != 3).bool().unsqueeze(-1).repeat(1, 2)
 
         # assuming the wordpiece mask doesn't intersect with the other masks (pad, cls/sep)
-        transitions_mask[:, 2] |= is_wordpiece & ((last_predictions == 1) | (last_predictions == 2)).byte()
+        transitions_mask[:, 2] |= is_wordpiece & ((last_predictions == 1) | (last_predictions == 2)).bool()
 
         class_log_probabilities = replace_masked_values(class_log_probabilities, transitions_mask, -1e7)
 
