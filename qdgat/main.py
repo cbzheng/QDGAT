@@ -165,6 +165,8 @@ def train(args, network, train_itr, dev_itr):
                 optimizer.zero_grad()
                 update_cnt += 1
 
+            print("Update count:", update_cnt)
+            
             if update_cnt % (args.log_per_updates * args.gradient_accumulation_steps) == 0 or update_cnt == 1:
                 logger.info("QDGAT train: step:{0:6} loss:{1:.5f} f1:{2:.5f} em:{3:.5f} left:{4}".format(
                     update_cnt, metrics['loss'].avg, metrics['f1'].avg, metrics['em'].avg,
