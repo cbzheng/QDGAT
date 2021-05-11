@@ -14,6 +14,7 @@ from utils import create_logger
 from transformers import RobertaTokenizer, RobertaModel, AdamW, get_linear_schedule_with_warmup
 from torch.utils.data import DataLoader, RandomSampler
 from drop_dataloader import create_collate_fn
+from tqdm.notebook import tqdm
 
 
 logger = logging.getLogger()
@@ -142,7 +143,7 @@ def train(args, network, train_itr, dev_itr):
 
         reset_metrics()
         
-        for batch in train_itr:
+        for batch in tqdm(train_itr):
             step += 1
             network.train()
             output_dict = network(**batch)
@@ -160,6 +161,7 @@ def train(args, network, train_itr, dev_itr):
 
             if (step+1) % args.gradient_accumulation_steps == 0:
                 optimizer.step()
+                scheduler.step()  # Update learning rate schedule
                 optimizer.zero_grad()
                 update_cnt += 1
 
