@@ -11,10 +11,11 @@ from utils import AverageMeter
 from datetime import datetime
 from optimizer import AdamW
 from utils import create_logger
-from transformers import RobertaTokenizer, RobertaModel, AdamW, get_linear_schedule_with_warmup
+from transformers import AlbertTokenizer, AlbertModel, AdamW, get_linear_schedule_with_warmup
 from torch.utils.data import DataLoader, RandomSampler
 from drop_dataloader import create_collate_fn
-from tqdm.notebook import tqdm
+# from tqdm.notebook import tqdm
+from tqdm import tqdm
 
 
 logger = logging.getLogger()
@@ -33,7 +34,7 @@ class NumpyEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 def build_network(args):
-    bert_model = RobertaModel.from_pretrained(args.roberta_model, output_hidden_states=True)
+    bert_model = AlbertModel.from_pretrained(args.albert_model, output_hidden_states=True)
     network = QDGATNet(bert_model,
                     hidden_size=bert_model.config.hidden_size,
                     dropout_prob=args.dropout)
@@ -138,6 +139,9 @@ def train(args, network, train_itr, dev_itr):
     train_start = datetime.now()
     save_prefix = os.path.join(args.save_dir, "checkpoint_best")
 
+    # Load trained model
+    # pre_epoch, _, best_result = load(network, optimizer, args.pre_path)
+
     for epoch in range(start_epoch, args.max_epoch + 1):
         logger.info('Start epoch {}'.format(epoch))
 
@@ -165,12 +169,12 @@ def train(args, network, train_itr, dev_itr):
                 optimizer.zero_grad()
                 update_cnt += 1
 
-            print("Update count:", update_cnt)
+            # print("Update count:", update_cnt)
             
             if update_cnt % (args.log_per_updates * args.gradient_accumulation_steps) == 0 or update_cnt == 1:
-                logger.info("QDGAT train: step:{0:6} loss:{1:.5f} f1:{2:.5f} em:{3:.5f} left:{4}".format(
-                    update_cnt, metrics['loss'].avg, metrics['f1'].avg, metrics['em'].avg,
-                    str((datetime.now() - train_start) / (update_cnt + 1) * (num_train_steps - update_cnt - 1)).split('.')[0]))
+                # logger.info("QDGAT train: step:{0:6} loss:{1:.5f} f1:{2:.5f} em:{3:.5f} left:{4}".format(
+                #     update_cnt, metrics['loss'].avg, metrics['f1'].avg, metrics['em'].avg,
+                #     str((datetime.now() - train_start) / (update_cnt + 1) * (num_train_steps - update_cnt - 1)).split('.')[0]))
                 reset_metrics()
 
 
@@ -242,7 +246,12 @@ def main():
     parser.add_argument("--eps", default=1e-8, type=float, help="ema gamma.")
     parser.add_argument("--bert_learning_rate", type=float, help="bert learning rate.")
     parser.add_argument("--bert_weight_decay", type=float, help="bert weight decay.")
-    parser.add_argument("--roberta_model", type=str, help="robert modle path.")
+    # roberta-base
+    # parser.add_argument("--roberta_model", type=str, help="robert modle path.")
+
+    parser.add_argument("--albert_model", type=str, help="albert modle path.")
+    # Just for training
+    parser.add_argument("--fold_num", type=int, default=4, help='the number of folds for training')
 
     args = parser.parse_args()
 
@@ -259,7 +268,8 @@ def main():
 
     args.batch_size = args.batch_size // args.gradient_accumulation_steps
 
-    tokenizer = RobertaTokenizer.from_pretrained(args.roberta_model)
+    tokenizer = AlbertTokenizer.from_pretrained(args.albert_model)
+    # tokenizer.save_pretrained('./pretrained/') 
 
     preprocess_drop(args, tokenizer)
 

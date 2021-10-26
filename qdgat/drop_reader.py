@@ -124,14 +124,14 @@ def retrieve_dates(passage_text):
         if year is None and day is None and i>0 and tokens[i-1] not in ['in', 'by', 'on', 'of'] and not (tokens[i-1]=='between' and tokens[i+1]=='and'):
           continue
         if year is None and cyear is not None:#miss backward
-          print('use replace',(sidx, eidx, year, month, day))
+        #   print('use replace',(sidx, eidx, year, month, day))
           year = cyear
         if day is None:
           day = 1
-          print('use default day')
+        #   print('use default day')
         dates.append((sidx, eidx, year, month, day,' '.join(tokens[sidx:eidx+1])))
         if sidx2 is not None:# and sidx2 > dates[-1][1]:
-          print('match!!!!!!', ' '.join(tokens[sidx2:eidx+1]))
+        #   print('match!!!!!!', ' '.join(tokens[sidx2:eidx+1]))
           dates.append((sidx2, sidx2, year, month, int(get_day(tokens[sidx2]))))
       else:
         cyear = get_year(tokens[i])
@@ -139,7 +139,7 @@ def retrieve_dates(passage_text):
           cyear=int(cyear)
           for j,date in enumerate(dates):
             if date[2] is None:
-              print('use latter year',date)
+            #   print('use latter year',date)
               dates[j]=(date[0],date[1],cyear, date[3],date[4])
 
   default_year=2020# run nian
