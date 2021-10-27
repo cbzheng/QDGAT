@@ -1,13 +1,13 @@
 SAVE_DIR=output_dir
 DATA_DIR=$1
-ALBERT_MODEL_PATH=$2
+ROBERTA_MODEL_PATH=$2
 
 CUDA_VISIBLE_DEVICES=0 python3 main.py \
   --data_dir $DATA_DIR \
   --save_dir "output" \
   --batch_size 16 \
-  --eval_batch_size 5 \
-  --max_epoch 5 \
+  --eval_batch_size 8 \
+  --max_epoch 15 \
   --do_train  \
   --do_eval  \
   --warmup 0.06 \
@@ -20,6 +20,5 @@ CUDA_VISIBLE_DEVICES=0 python3 main.py \
   --bert_weight_decay 0.01 \
   --log_per_updates 100 \
   --eps 1e-6 \
-  --albert_model $ALBERT_MODEL_PATH \
-  # --roberta_model $ROBERTA_MODEL_PATH \
+  --roberta_model $ROBERTA_MODEL_PATH \
   

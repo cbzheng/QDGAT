@@ -11,7 +11,7 @@ from utils import AverageMeter
 from datetime import datetime
 from optimizer import AdamW
 from utils import create_logger
-from transformers import AlbertTokenizer, AlbertModel, AdamW, get_linear_schedule_with_warmup
+from transformers import RobertaTokenizer, RobertaModel, AdamW, get_linear_schedule_with_warmup
 from torch.utils.data import DataLoader, RandomSampler
 from drop_dataloader import create_collate_fn
 # from tqdm.notebook import tqdm
@@ -34,7 +34,7 @@ class NumpyEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 def build_network(args):
-    bert_model = AlbertModel.from_pretrained(args.albert_model, output_hidden_states=True)
+    bert_model = RobertaModel.from_pretrained(args.roberta_model, output_hidden_states=True)
     network = QDGATNet(bert_model,
                     hidden_size=bert_model.config.hidden_size,
                     dropout_prob=args.dropout)
@@ -247,9 +247,9 @@ def main():
     parser.add_argument("--bert_learning_rate", type=float, help="bert learning rate.")
     parser.add_argument("--bert_weight_decay", type=float, help="bert weight decay.")
     # roberta-base
-    # parser.add_argument("--roberta_model", type=str, help="robert modle path.")
+    parser.add_argument("--roberta_model", type=str, help="robert modle path.")
 
-    parser.add_argument("--albert_model", type=str, help="albert modle path.")
+    # parser.add_argument("--albert_model", type=str, help="albert modle path.")
     # Just for training
     parser.add_argument("--fold_num", type=int, default=4, help='the number of folds for training')
 
@@ -268,7 +268,7 @@ def main():
 
     args.batch_size = args.batch_size // args.gradient_accumulation_steps
 
-    tokenizer = AlbertTokenizer.from_pretrained(args.albert_model)
+    tokenizer = RobertaTokenizer.from_pretrained(args.roberta_model)
     # tokenizer.save_pretrained('./pretrained/') 
 
     preprocess_drop(args, tokenizer)

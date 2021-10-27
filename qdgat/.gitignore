@@ -2,5 +2,6 @@
 /output
 /pretrained
 /raw
-/train_5_epoch
+/trained_5_epoch
 nohup.out
+/model_15_epoch
