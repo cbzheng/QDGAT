@@ -79,6 +79,7 @@ def preprocess_drop(args, tokenizer):
     for mode in ['train', 'dev']:
         cache_fpath = os.path.join(args.data_dir, "%s.pkl"%mode)
         if os.path.exists(cache_fpath): continue
+
         data_fpath = os.path.join(args.data_dir, "drop_dataset_number_%s_parsed.json"%mode)
         if not os.path.exists(data_fpath):
             raise Exception("Missing %s for preprocessing."%data_fpath)
@@ -128,12 +129,6 @@ def train(args, network, train_itr, dev_itr):
     scheduler = get_linear_schedule_with_warmup(
         optimizer, num_warmup_steps=args.warmup*num_train_steps, num_training_steps=num_train_steps
     )
-    # optimizer = AdamW(optimizer_grouped_parameters,
-    #                 lr=args.learning_rate,
-    #                 warmup=args.warmup,
-    #                 t_total=num_train_steps,
-    #                 max_grad_norm=args.grad_clipping,
-    #                 schedule=args.warmup_schedule)
 
     update_cnt, step = 0, 0
     train_start = datetime.now()
@@ -169,7 +164,6 @@ def train(args, network, train_itr, dev_itr):
                 optimizer.zero_grad()
                 update_cnt += 1
 
-            # print("Update count:", update_cnt)
             
             if update_cnt % (args.log_per_updates * args.gradient_accumulation_steps) == 0 or update_cnt == 1:
                 # logger.info("QDGAT train: step:{0:6} loss:{1:.5f} f1:{2:.5f} em:{3:.5f} left:{4}".format(

@@ -2,6 +2,8 @@ SAVE_DIR=output_dir
 DATA_DIR=$1
 ROBERTA_MODEL_PATH=$2
 
+cd ./qdgat/
+
 CUDA_VISIBLE_DEVICES=0 python3 main.py \
   --data_dir $DATA_DIR \
   --save_dir "output" \

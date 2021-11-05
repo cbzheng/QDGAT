@@ -1,3 +1,9 @@
+/data
+/output
+/pretrained
+/trained_5_epoch
+/nohup.out
+/model_15_epoch
 # Initially taken from Github's Python gitignore file
 
 # Byte-compiled / optimized / DLL files
