@@ -3,9 +3,9 @@
 # Train the model
 - The annotated data is in ./raw/annotated
 - Pretrain the model using pretrain_split_annotated.json
-- Execute the `run.sh` to train. The first parameter is the path to the data and the second one is the pretrained language model.
+- Execute the `run.sh` to run cross validation. The first parameter is the path to the data and the second one is the pretrained language model.
 ```
-sh ./run.sh ./raw/annotated/pretrain_split_annotated.json roberta-base
+sh ./run.sh ./data/validation roberta-base
 ```
 
 <!-- # Framework

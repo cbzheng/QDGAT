@@ -6,6 +6,7 @@ from qdgat.drop_dataloader import create_collate_fn
 # debugpy.listen(5678)
 # debugpy.wait_for_client()
 
+
 def cross_validation(
     network,
     data_dir,
@@ -20,7 +21,8 @@ def cross_validation(
     eval_loss_list, eval_f1_list, eval_em_list = [], [], []
 
     for i in range(k):
-        logger.info(f'------------------------- Cross validation: fold {i} -------------------------')
+        logger.info(
+            f'------------------------- Cross validation: fold {i} -------------------------')
 
         train_paths = [
             '{}/train_cv_{}.pkl'.format(data_dir, j) for j in range(k) if i != j]
@@ -37,7 +39,7 @@ def cross_validation(
             args, data_mode="train", tokenizer=tokenizer, loaded_data=train_data)
         train_sampler = RandomSampler(train_dataset)
         train_dataset = DataLoader(train_dataset, sampler=train_sampler,
-                                    batch_size=args.batch_size, num_workers=0, collate_fn=collate_fn, pin_memory=False)
+                                   batch_size=args.batch_size, num_workers=0, collate_fn=collate_fn, pin_memory=False)
 
         # prepare the dev data
         dev_data = []
@@ -50,9 +52,11 @@ def cross_validation(
                                  num_workers=0, collate_fn=collate_fn, pin_memory=False, shuffle=False)
 
         train_func(args, network, train_dataset, dev_dataset)
-        eval_loss, eval_f1, eval_em = eval_func(args, network, dev_dataset) 
+        eval_loss, eval_f1, eval_em = eval_func(args, network, dev_dataset)
         eval_loss_list.append(eval_loss)
         eval_f1_list.append(eval_f1)
         eval_em_list.append(eval_em)
-    
+
+    logger.info("Cross validation results: F1 {}, EM {}.".format(
+        sum(eval_f1_list)/len(eval_f1_list), sum(eval_em_list)/len(eval_em_list)))
     return eval_loss_list, eval_f1_list, eval_em_list
