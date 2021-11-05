@@ -136,17 +136,20 @@ def create_collate_fn(padding_idx=1, use_cuda=False):
     return collate_fn
 
 class DropDataBuilder(object):
-    def __init__(self, args, data_mode, tokenizer, padding_idx=1):
+    def __init__(self, data_path, args, data_mode, tokenizer, padding_idx=1, loaded_data=None):
         self.args = args
         self.cls_idx = tokenizer.convert_tokens_to_ids(tokenizer.cls_token)
         self.sep_idx = tokenizer.convert_tokens_to_ids(tokenizer.sep_token)
         self.padding_idx = padding_idx
         self.is_train = data_mode == "train"
         self.vocab_size = len(tokenizer)
-        dpath = "{}.pkl".format(data_mode)
-        with open(os.path.join(args.data_dir, dpath), "rb") as f:
-            print("Load data from {}.".format(dpath))
-            data = pickle.load(f)
+
+        data = loaded_data
+        if data is None:
+            dpath = "{}.pkl".format(data_path)
+            with open(dpath, "rb") as f:
+                print("Load data from {}.".format(dpath))
+                data = pickle.load(f)
 
         raw_data = []
         for item in data:
@@ -320,8 +323,8 @@ class DropDataBuilder(object):
         return out_batch
 
 class DropBatchGen(object):
-    def __init__(self, args, data_mode, tokenizer, padding_idx=1):
-        self.gen = DropDataBuilder(args, data_mode, tokenizer, padding_idx)
+    def __init__(self, args, data_mode, tokenizer, padding_idx=1, loaded_data=None):
+        self.gen = DropDataBuilder('', args, data_mode, tokenizer, padding_idx, loaded_data=loaded_data)
 
     def __getitem__(self, index):
         return self.gen.get(index)

@@ -5,9 +5,9 @@ ROBERTA_MODEL_PATH=$2
 # cd ./qdgat/
 
 CUDA_VISIBLE_DEVICES=0 python3 main.py \
-  --data_dir $DATA_DIR \
   --save_dir "output" \
   --batch_size 16 \
+  --data_dir $DATA_DIR \
   --eval_batch_size 5 \
   --max_epoch 5 \
   --do_train  \

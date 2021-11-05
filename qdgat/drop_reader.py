@@ -539,7 +539,7 @@ class DropReader(object):
                             "counting", "multi_span"], f"Unsupported skip type: {item}"
         self.instance_format = instance_format
         self.relaxed_span_match_for_finding_labels = relaxed_span_match_for_finding_labels
-        self.flexibility_threshold = 1000
+        self.flexibility_threshold = 1000\
 
     def _read(self, file_path: str):
       

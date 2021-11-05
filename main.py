@@ -4,6 +4,7 @@ import os, sys, random, numpy, pickle
 import argparse
 import logging
 from pprint import pprint
+from cross_validataion import cross_validation
 from qdgat.drop_reader import DropReader
 from qdgat.drop_dataloader import DropBatchGen
 from qdgat.network import QDGATNet
@@ -74,25 +75,25 @@ def save(args, network, optimizer, prefix, epoch, best_result):
     torch.save(network_state, state_path)
     logger.info('model saved to {}'.format(prefix))
 
-def preprocess_drop(args, tokenizer):
+# def preprocess_drop(args, tokenizer):
     
-    for mode in ['train', 'dev']:
-        cache_fpath = os.path.join(args.data_dir, "%s.pkl"%mode)
-        if os.path.exists(cache_fpath): continue
+#     for mode in ['train', 'dev']:
+#         cache_fpath = os.path.join(args.data_dir, "%s.pkl"%mode)
+#         if os.path.exists(cache_fpath): continue
 
-        data_fpath = os.path.join(args.data_dir, "drop_dataset_number_%s_parsed.json"%mode)
-        if not os.path.exists(data_fpath):
-            raise Exception("Missing %s for preprocessing."%data_fpath)
+#         data_fpath = os.path.join(args.data_dir, "drop_dataset_number_%s_parsed.json"%mode)
+#         if not os.path.exists(data_fpath):
+#             raise Exception("Missing %s for preprocessing."%data_fpath)
 
-        skip_when_all_empty = ["passage_span", "question_span", "addition_subtraction", "counting", "multi_span"] if mode=='train' else None
-        reader = DropReader(
-            tokenizer, args.passage_length_limit, args.question_length_limit,
-            skip_when_all_empty=skip_when_all_empty
-        )
-        data = reader._read(data_fpath)
-        with open(cache_fpath, "wb") as f:
-            pickle.dump(data, f)
-    logger.info('End of data preprocess.')
+#         skip_when_all_empty = ["passage_span", "question_span", "addition_subtraction", "counting", "multi_span"] if mode=='train' else None
+#         reader = DropReader(
+#             tokenizer, args.passage_length_limit, args.question_length_limit,
+#             skip_when_all_empty=skip_when_all_empty
+#         )
+#         data = reader._read(data_fpath)
+#         with open(cache_fpath, "wb") as f:
+#             pickle.dump(data, f)
+#     logger.info('End of data preprocess.')
 
 
 def train(args, network, train_itr, dev_itr):
@@ -261,32 +262,34 @@ def main():
     args.batch_size = args.batch_size // args.gradient_accumulation_steps
 
     tokenizer = RobertaTokenizer.from_pretrained(args.roberta_model)
-    # tokenizer.save_pretrained('./pretrained/') 
-
-    preprocess_drop(args, tokenizer)
-
-    train_dataset, eval_dataset, pred_dataset = None, None, None
-
-    if not args.do_train and not args.do_eval:
-        raise Exception('Both do_train and do_eval are False.')
-
-    collate_fn = create_collate_fn(tokenizer.pad_token_id, args.use_cuda)
-
-    if args.do_train:
-        train_dataset = DropBatchGen(args, data_mode="train", tokenizer=tokenizer)
-        train_sampler = RandomSampler(train_dataset)
-        train_dataset = DataLoader(train_dataset, sampler=train_sampler, batch_size=args.batch_size, num_workers=0, collate_fn=collate_fn, pin_memory=False)
-
-    if args.do_eval:
-        eval_dataset = DropBatchGen(args, data_mode="dev", tokenizer=tokenizer)
-        eval_dataset = DataLoader(eval_dataset, batch_size=args.eval_batch_size, num_workers=0, collate_fn=collate_fn, pin_memory=False, shuffle=False)
 
     network = build_network(args)
 
-    if args.do_train:
-        train(args, network, train_dataset, eval_dataset)
-    elif args.do_eval:
-        evaluate(args, network, eval_dataset)
+    cross_validation(network, args.data_dir, args, tokenizer, train, evaluate, logger)
+    # tokenizer.save_pretrained('./pretrained/') 
+
+    # preprocess_drop(args, tokenizer)
+
+    # train_dataset, eval_dataset, pred_dataset = None, None, None
+
+    # if not args.do_train and not args.do_eval:
+    #     raise Exception('Both do_train and do_eval are False.')
+
+    # collate_fn = create_collate_fn(tokenizer.pad_token_id, args.use_cuda)
+
+    # if args.do_train:
+    #     train_dataset = DropBatchGen(args, data_mode="train", tokenizer=tokenizer)
+    #     train_sampler = RandomSampler(train_dataset)
+    #     train_dataset = DataLoader(train_dataset, sampler=train_sampler, batch_size=args.batch_size, num_workers=0, collate_fn=collate_fn, pin_memory=False)
+
+    # if args.do_eval:
+    #     eval_dataset = DropBatchGen(args, data_mode="dev", tokenizer=tokenizer)
+    #     eval_dataset = DataLoader(eval_dataset, batch_size=args.eval_batch_size, num_workers=0, collate_fn=collate_fn, pin_memory=False, shuffle=False)
+
+    # if args.do_train:
+    #     train(args, network, train_dataset, eval_dataset)
+    # elif args.do_eval:
+    #     evaluate(args, network, eval_dataset)
 
 if __name__ == '__main__':
     main()
