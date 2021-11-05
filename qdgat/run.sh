@@ -6,8 +6,8 @@ CUDA_VISIBLE_DEVICES=0 python3 main.py \
   --data_dir $DATA_DIR \
   --save_dir "output" \
   --batch_size 16 \
-  --eval_batch_size 8 \
-  --max_epoch 15 \
+  --eval_batch_size 5 \
+  --max_epoch 5 \
   --do_train  \
   --do_eval  \
   --warmup 0.06 \

@@ -1,7 +1,6 @@
 /data
 /output
 /pretrained
-/raw
 /trained_5_epoch
 nohup.out
 /model_15_epoch
