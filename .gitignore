@@ -3,6 +3,8 @@ pretrained/
 trained_5_epoch/
 nohup.out/
 model_15_epoch/
+bfg.jar
+.git.bfg-report
 # Initially taken from Github's Python gitignore file
 
 # Byte-compiled / optimized / DLL files
