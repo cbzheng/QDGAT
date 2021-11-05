@@ -4,19 +4,19 @@ import os, sys, random, numpy, pickle
 import argparse
 import logging
 from pprint import pprint
-from drop_reader import DropReader
-from drop_dataloader import DropBatchGen
-from network import QDGATNet
-from utils import AverageMeter
+from qdgat.drop_reader import DropReader
+from qdgat.drop_dataloader import DropBatchGen
+from qdgat.network import QDGATNet
+from qdgat.utils import AverageMeter
 from datetime import datetime
-from optimizer import AdamW
-from utils import create_logger
+from qdgat.optimizer import AdamW
+from qdgat.utils import create_logger
 from transformers import RobertaTokenizer, RobertaModel, AdamW, get_linear_schedule_with_warmup
 from torch.utils.data import DataLoader, RandomSampler
-from drop_dataloader import create_collate_fn
+from qdgat.drop_dataloader import create_collate_fn
 # from tqdm.notebook import tqdm
 from tqdm import tqdm
-
+import numpy as np
 
 logger = logging.getLogger()
 logging.basicConfig(level = logging.INFO)
@@ -243,8 +243,6 @@ def main():
     # roberta-base
     parser.add_argument("--roberta_model", type=str, help="robert modle path.")
 
-    # parser.add_argument("--albert_model", type=str, help="albert modle path.")
-    # Just for training
     parser.add_argument("--fold_num", type=int, default=4, help='the number of folds for training')
 
     args = parser.parse_args()

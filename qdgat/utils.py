@@ -5,7 +5,7 @@ import numpy
 import logging
 from time import gmtime, strftime
 from typing import Union, List, Tuple
-from drop_eval import (get_metrics as drop_em_and_f1, answer_json_to_strings)
+from qdgat.drop_eval import (get_metrics as drop_em_and_f1, answer_json_to_strings)
 
 NUM_NER_TYPES = ['ENT2NUM', 'NUMBER', 'PERCENT','MONEY','TIME','DATE','DURATION','ORDINAL', 'YARD']
 def dump_gat_info(gnodes_mask, gedges, meta):

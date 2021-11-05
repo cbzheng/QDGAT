@@ -5,8 +5,8 @@ from torch.nn import Module
 from typing import Tuple, Dict
 
 from allennlp.modules.conditional_random_field import ConditionalRandomField, allowed_transitions
-from allennlp_util import replace_masked_values, logsumexp
-from beam_search import BeamSearch
+from qdgat.allennlp_util import replace_masked_values, logsumexp
+from qdgat.beam_search import BeamSearch
 
 
 """

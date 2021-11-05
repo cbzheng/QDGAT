@@ -1,9 +1,8 @@
-/data
-/output
-/pretrained
-/trained_5_epoch
-/nohup.out
-/model_15_epoch
+output/
+pretrained/
+trained_5_epoch/
+nohup.out/
+model_15_epoch/
 # Initially taken from Github's Python gitignore file
 
 # Byte-compiled / optimized / DLL files
@@ -149,7 +148,6 @@ runs
 /examples/rag/sweep
 
 # data
-/data
 serialization_dir
 
 # emacs

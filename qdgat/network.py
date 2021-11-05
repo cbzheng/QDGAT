@@ -4,11 +4,11 @@ from typing import List, Dict, Any
 from collections import OrderedDict
 import torch.nn.functional as F
 
-import allennlp_util as util
-from utils import DropEmAndF1, format_number
-from qdgat import ResidualGRU, BertFeedForward, QDGAT
+import qdgat.allennlp_util as util
+from qdgat.utils import DropEmAndF1, format_number
+from qdgat.qdgat import ResidualGRU, BertFeedForward, QDGAT
 
-from multispan_heads import multispan_heads_mapping, remove_substring_from_prediction
+from qdgat.multispan_heads import multispan_heads_mapping, remove_substring_from_prediction
 
 class QDGATNet(nn.Module):
     """

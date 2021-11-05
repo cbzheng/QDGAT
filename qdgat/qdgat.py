@@ -3,7 +3,7 @@ import torch
 import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
-import allennlp_util as util
+import qdgat.allennlp_util as util
 from transformers.activations import gelu
 
 class Linear(nn.Linear):

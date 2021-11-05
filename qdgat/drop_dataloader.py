@@ -3,7 +3,7 @@ import pickle
 import torch
 import random
 import numpy as np
-from drop_token import Token
+from qdgat.drop_token import Token
 
 def do_pad(batch, key, padding):
     lst = [v[key] for v in batch]
