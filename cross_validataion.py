@@ -8,7 +8,7 @@ from qdgat.drop_dataloader import create_collate_fn
 
 
 def cross_validation(
-    network,
+    build_network,
     data_dir,
     args,
     tokenizer,
@@ -23,6 +23,8 @@ def cross_validation(
     for i in range(k):
         logger.info(
             f'------------------------- Cross validation: fold {i} -------------------------')
+        
+        network = build_network(args)
 
         train_paths = [
             '{}/train_cv_{}.pkl'.format(data_dir, j) for j in range(k) if i != j]

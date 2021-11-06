@@ -263,9 +263,7 @@ def main():
 
     tokenizer = RobertaTokenizer.from_pretrained(args.roberta_model)
 
-    network = build_network(args)
-
-    cross_validation(network, args.data_dir, args, tokenizer, train, evaluate, logger)
+    cross_validation(build_network, args.data_dir, args, tokenizer, train, evaluate, logger)
     # tokenizer.save_pretrained('./pretrained/') 
 
     # preprocess_drop(args, tokenizer)
