@@ -33,9 +33,9 @@ If you use the code, please cite the following paper:
   `wget https://huggingface.co/deepset/roberta-base-squad2/resolve/main/merges.txt`
   `wget https://huggingface.co/deepset/roberta-base-squad2/resolve/main/vocab.json`
 
-- Train with simple multi-span extraction (NumNet+).
+- Train with simple multi-span extraction (NumNet+). **And you can see results saved in numnet.log!**
 
-    `sh train.sh 345 5e-4 1.5e-5 5e-5 0.01`
+    `sh train.sh 345 5e-4 1.5e-5 5e-5 0.01 | tee numnet.log`
 
 - That's all, just forget about the things below!!!
 
