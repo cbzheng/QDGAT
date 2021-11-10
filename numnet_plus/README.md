@@ -29,7 +29,7 @@ If you use the code, please cite the following paper:
   `cd data/validation`
   `mkdir roberta & cd roberta`
   `wget https://huggingface.co/deepset/roberta-base-squad2/resolve/main/pytorch_model.bin`
-  `wget https://huggingface.co/deepset/roberta-base-squad2/resolve/main/config.json`
+  `wget https://huggingface.co/deepset/roberta-base-squad2/resolve/main/config.json` and remember to add `"output_hidden_states": true` in it.
   `wget https://huggingface.co/deepset/roberta-base-squad2/resolve/main/merges.txt`
   `wget https://huggingface.co/deepset/roberta-base-squad2/resolve/main/vocab.json`
 
