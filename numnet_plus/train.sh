@@ -39,12 +39,12 @@ SAVE_DIR=${BASE_DIR}/numnet_plus_${SEED}_LR_${LR}_BLR_${BLR}_WD_${WD}_BWD_${BWD}
 DATA_CONFIG="--data_dir ${DATA_DIR} --save_dir ${SAVE_DIR}"
 TRAIN_CONFIG="--batch_size 16 --eval_batch_size 5 --max_epoch 8 --warmup 0.06 --optimizer adam \
               --learning_rate ${LR} --weight_decay ${WD} --seed ${SEED} --gradient_accumulation_steps 4 \
-              --bert_learning_rate ${BLR} --bert_weight_decay ${BWD} --log_per_updates 100 --eps 1e-6 --use_gcn"
+              --bert_learning_rate ${BLR} --bert_weight_decay ${BWD} --log_per_updates 100 --eps 1e-6 --use_hgt"
 BERT_CONFIG="--roberta_model ${DATA_DIR}/roberta"
 
 
 echo "Start training..."
-CUDA_VISIBLE_DEVICES=0 python ${CODE_DIR}/roberta_gcn_cli.py \
+CUDA_VISIBLE_DEVICES=1 python ${CODE_DIR}/roberta_gcn_cli.py \
     ${DATA_CONFIG} \
     ${TRAIN_CONFIG} \
     ${BERT_CONFIG} \

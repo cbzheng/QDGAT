@@ -72,6 +72,7 @@ def main():
                     hidden_size=bert_model.config.hidden_size,
                     dropout_prob=args.dropout,
                     use_gcn=args.use_gcn,
+                    use_hgt=args.use_hgt,
                     gcn_steps=args.gcn_steps)
         else:
             network = TNumericallyAugmentedBertNet(bert_model,
