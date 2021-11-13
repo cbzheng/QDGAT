@@ -37,7 +37,7 @@ CODE_DIR=${BASE_DIR}
 
 SAVE_DIR=${BASE_DIR}/numnet_plus_${SEED}_LR_${LR}_BLR_${BLR}_WD_${WD}_BWD_${BWD}${TMSPAN}
 DATA_CONFIG="--data_dir ${DATA_DIR} --save_dir ${SAVE_DIR}"
-TRAIN_CONFIG="--batch_size 16 --eval_batch_size 5 --max_epoch 8 --warmup 0.06 --optimizer adam \
+TRAIN_CONFIG="--batch_size 16 --eval_batch_size 5 --max_epoch 5 --warmup 0.06 --optimizer adam \
               --learning_rate ${LR} --weight_decay ${WD} --seed ${SEED} --gradient_accumulation_steps 4 \
               --bert_learning_rate ${BLR} --bert_weight_decay ${BWD} --log_per_updates 100 --eps 1e-6 --use_gcn"
 BERT_CONFIG="--roberta_model ${DATA_DIR}/roberta"

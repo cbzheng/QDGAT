@@ -148,8 +148,8 @@ class FFNLayer(nn.Module):
 class HGT(nn.Module):
 
     def __init__(self, node_dim, extra_factor_dim=0, iteration_steps=1, hgt_n_heads=2, use_norm=True):
-        super(GCN, self).__init__()
-
+        super(HGT, self).__init__()
+        print('use hgt')
         self.node_dim = node_dim
         self.iteration_steps = iteration_steps
 

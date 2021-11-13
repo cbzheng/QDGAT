@@ -87,8 +87,8 @@ class NumericallyAugmentedBertNet(nn.Module):
                  hidden_size: int,
                  dropout_prob: float = 0.1,
                  answering_abilities: List[str] = None,
-                 use_gcn: bool = False,
-                 use_hgt: bool = False,
+                 use_gcn: bool = True,
+                 use_hgt: bool = True,
                  gcn_steps: int = 1) -> None:
         super(NumericallyAugmentedBertNet, self).__init__()
         self.use_gcn = use_gcn
@@ -127,7 +127,8 @@ class NumericallyAugmentedBertNet(nn.Module):
             self._gcn_input_proj = nn.Linear(node_dim * 2, node_dim)
             if use_hgt:
                 self._gcn = HGT(node_dim=node_dim, iteration_steps=gcn_steps)
-            self._gcn = GCN(node_dim=node_dim, iteration_steps=gcn_steps)
+            else:
+                self._gcn = GCN(node_dim=node_dim, iteration_steps=gcn_steps)
             self._iteration_steps = gcn_steps
             self._proj_ln = nn.LayerNorm(node_dim)
             self._proj_ln0 = nn.LayerNorm(node_dim)
