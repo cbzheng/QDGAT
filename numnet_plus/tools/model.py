@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from .optimizer import BertAdam as Adam
 from .utils import AverageMeter
-
+import transformers
 
 class DropBertModel():
     def __init__(self, args, network, state_dict=None, num_train_step=-1):
@@ -11,6 +11,7 @@ class DropBertModel():
         self.step = 0
         self.updates = 0
         self.network = network
+        num_warmup_steps = int(num_train_step * args.warmup)
         if state_dict is not None:
             print("Load Model!")
             self.network.load_state_dict(state_dict["state"])
@@ -18,6 +19,17 @@ class DropBertModel():
 
         self.total_param = sum([p.nelement() for p in self.network.parameters() if p.requires_grad])
         no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
+
+        # freeze layers before the last 4 layers
+        # no_freeze = [ f'encoder.layer.{i}' for i in range(8, 12) ]
+        # no_freeze.append('pooler.dense.weight')
+        # no_freeze.append('pooler.dense.bias')
+
+
+        # for n, p in self.network.bert.named_parameters():
+        #      if not any(nd in n for nd in no_freeze):
+        #          p.requires_grad = False
+
         optimizer_parameters = [
             {'params': [p for n, p in self.network.bert.named_parameters() if not any(nd in n for nd in no_decay)],
              'weight_decay': args.bert_weight_decay, 'lr': args.bert_learning_rate},
@@ -26,12 +38,18 @@ class DropBertModel():
             {'params': [p for n, p in self.network.named_parameters() if not n.startswith("bert.")],
              "weight_decay": args.weight_decay, "lr": args.learning_rate}
         ]
-        self.optimizer = Adam(optimizer_parameters,
-                              lr=args.learning_rate,
-                              warmup=args.warmup,
-                              t_total=num_train_step,
-                              max_grad_norm=args.grad_clipping,
-                              schedule=args.warmup_schedule)
+
+        # change to the new huggingface transformers stype
+        self.optimizer = transformers.AdamW(optimizer_parameters, lr=args.learning_rate)
+        self.scheduler = transformers.get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=num_warmup_steps,
+                                                                      num_training_steps=num_train_step)
+        # transformers.AdamW(optimizer_parameters, lr=args.learning_rate, correct_bias=False)
+        # self.optimizer = Adam(optimizer_parameters,
+        #                     #   lr=args.learning_rate,
+        #                       warmup=args.warmup,
+        #                       t_total=num_train_step,
+        #                       max_grad_norm=args.grad_clipping,
+        #                       schedule=args.warmup_schedule)
         if self.args.gpu_num > 0:
             self.network.cuda()
         self.em_avg = AverageMeter()
@@ -54,7 +72,10 @@ class DropBertModel():
             loss /= self.args.gradient_accumulation_steps
         loss.backward()
         if (self.step + 1) % self.args.gradient_accumulation_steps == 0:
+            # torch.nn.utils.clip_grad_norm_(model.parameters(), max_grad_norm)
+
             self.optimizer.step()
+            self.scheduler.step()
             self.optimizer.zero_grad()
             self.updates += 1
         self.step += 1

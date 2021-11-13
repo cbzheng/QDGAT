@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from tools import allennlp as util
+import dgl
 
 def gelu(x):
     return x * 0.5 * (1.0 + torch.erf(x / math.sqrt(2.0)))
@@ -41,7 +42,7 @@ class FFNLayer(nn.Module):
             inter_act = self.ln(inter_act)
         return self.fc2(inter_act)
 
-
+# TODO replace GCN with dgl version
 class GCN(nn.Module):
 
     def __init__(self, node_dim, extra_factor_dim=0, iteration_steps=1):
@@ -71,7 +72,9 @@ class GCN(nn.Module):
         diagmat = torch.diagflat(torch.ones(d_node.size(1), dtype=torch.long, device=d_node.device))
         diagmat = diagmat.unsqueeze(0).expand(d_node.size(0), -1, -1)
         dd_graph = d_node_mask.unsqueeze(1) * d_node_mask.unsqueeze(-1) * (1 - diagmat)
+        # larger than
         dd_graph_left = dd_graph * graph[:, :d_node_len, :d_node_len]
+        # smaller than
         dd_graph_right = dd_graph * (1 - graph[:, :d_node_len, :d_node_len])
 
         diagmat = torch.diagflat(torch.ones(q_node.size(1), dtype=torch.long, device=q_node.device))
@@ -87,6 +90,33 @@ class GCN(nn.Module):
         qd_graph = q_node_mask.unsqueeze(-1) * d_node_mask.unsqueeze(1)
         qd_graph_left = qd_graph * graph[:, d_node_len:, :d_node_len]
         qd_graph_right = qd_graph * (1 - graph[:, d_node_len:, :d_node_len])
+
+        # construct heterogeneous graph using dgl
+        for batch_idx in range(d_node.size(0)):
+            d_lg_d = torch.nonzero(dd_graph_left[batch_idx]).transpose(0, 1)
+            q_lg_q = torch.nonzero(qq_graph_left[batch_idx]).transpose(0, 1)
+            d_lg_q = torch.nonzero(dq_graph_left[batch_idx]).transpose(0, 1)
+            q_lg_d = torch.nonzero(qd_graph_left[batch_idx]).transpose(0, 1)
+            d_sm_d = torch.nonzero(dd_graph_right[batch_idx]).transpose(0, 1)
+            q_sm_q = torch.nonzero(qq_graph_right[batch_idx]).transpose(0, 1)
+            d_sm_q = torch.nonzero(dq_graph_right[batch_idx]).transpose(0, 1)
+            q_sm_d = torch.nonzero(qd_graph_right[batch_idx]).transpose(0, 1)
+            graph_data = {
+                ('d', 'd_lg_q','q'): (d_lg_q[0], d_lg_q[1]),
+                ('q', 'q_lg_d', 'd'): (q_lg_d[0], q_lg_d[1]),
+                ('d', 'd_lg_d', 'd'): (d_lg_d[0], d_lg_d[1]),
+                ('q', 'q_lg_q', 'q'): (q_lg_q[0], q_lg_q[1]),
+                ('d', 'd_sm_q','q'): (d_sm_q[0], d_sm_q[1]),
+                ('q', 'q_sm_d', 'd'): (q_sm_d[0], q_sm_d[1]),
+                ('d', 'd_sm_d', 'd'): (d_sm_d[0], d_sm_d[1]),
+                ('q', 'q_sm_q', 'q'): (q_sm_q[0], q_sm_q[1]),
+            }
+            g = dgl.heterograph(graph_data)
+            d_node_indices = torch.nonzero(d_node_mask[batch_idx])
+            q_node_indices = torch.nonzero(q_node_mask[batch_idx])
+            g.nodes['d'].data['inp'] = d_node[batch_idx][d_node_indices]
+            g.nodes['q'].data['inp'] = q_node[batch_idx][q_node_indices]
+
 
 
         d_node_neighbor_num = dd_graph_left.sum(-1) + dd_graph_right.sum(-1) + dq_graph_left.sum(-1) + dq_graph_right.sum(-1)
@@ -189,3 +219,5 @@ class GCN(nn.Module):
         all_q_weight = torch.cat(all_q_weight, dim=1)
 
         return d_node, q_node, all_d_weight, all_q_weight # d_node_weight, q_node_weight
+
+        #torch.Size([4, 1, 43])

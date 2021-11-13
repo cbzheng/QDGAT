@@ -252,6 +252,7 @@ def drop_tokenize(text, tokenizer, is_answer=False):
               ipdb.set_trace()
               xxx=1
           assert pos2>pos
+        #   TODO use the entity type
           ner_type = tokens[i][pos+len(FLAG_NER):pos2]
           tokens[i] = tokens[i][:pos]+tokens[i][pos2+len(FLAG_NER):]#remove entity flag
           if ner_type == pre_ner_type and len(sentences_entites[-1]) > 0:# and i == sentences_entites[-1][-1][0]+sentences_entites[-1][-1][-1]:

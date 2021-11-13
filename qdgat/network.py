@@ -171,6 +171,7 @@ class QDGATNet(nn.Module):
             mean_gnodes_embs = sum_gnodes_embs/gnodes_len.unsqueeze(-1).float()
             gnodes_mask_bin = (gnodes_len > 0).long()
             cls_emb = sequence_output[:, 0]
+            # TODO
             new_gnodes_embs = self.qdgat(mean_gnodes_embs, gnodes_mask_bin, cls_emb, gedges, gedge_types, is_print=False)
 
 

@@ -134,10 +134,16 @@ class NumericallyAugmentedBertNet(nn.Module):
         self._proj_sequence_h = nn.Linear(hidden_size, 1, bias=False)
         self._proj_number = nn.Linear(hidden_size*2, 1, bias=False)
 
+# TODO change the weight 
         self._proj_sequence_g0 = FFNLayer(hidden_size, hidden_size, 1, dropout_prob)
         self._proj_sequence_g1 = FFNLayer(hidden_size, hidden_size, 1, dropout_prob)
         self._proj_sequence_g2 = FFNLayer(hidden_size, hidden_size, 1, dropout_prob)
 
+        # self._emb_seq_g0 = FFNLayer(hidden_size * 2, hidden_size * 2, hidden_size, dropout_prob)
+        # self._emb_seq_g1 = FFNLayer(hidden_size * 2, hidden_size * 2, hidden_size, dropout_prob)
+        # self._emb_seq_g2 = FFNLayer(hidden_size * 2, hidden_size * 2, hidden_size, dropout_prob)
+        # self._emb_seq_g3 = FFNLayer(hidden_size * 2, hidden_size * 2, hidden_size, dropout_prob)
+        self.encoder_layer = nn.TransformerEncoderLayer(d_model=hidden_size, nhead=2)
         # span num extraction
         self._proj_span_num = FFNLayer( 3 * hidden_size, hidden_size, 9, dropout_prob)
 
@@ -161,7 +167,19 @@ class NumericallyAugmentedBertNet(nn.Module):
         # sequence_output, _, other_sequence_output = self.bert(input_ids, input_segments, input_mask)
         outputs = self.bert(input_ids, attention_mask=input_mask, token_type_ids=input_segments)
         sequence_output = outputs[0]
-        sequence_output_list = [ item for item in outputs[2][-4:] ]
+        sequence_output_list = [ item for item in outputs[2][-6:] ]
+
+        batch_layer_attention = []
+        for batch_idx in range(sequence_output.size(0)):
+            batch_layers = torch.stack([sequence_output_list[i][batch_idx] for i in range(6)])
+            self.encoder_layer(batch_layers)
+            batch_layer_attention.append(batch_layers)
+        
+        sequence_output_list[2] = torch.stack([batch_layer_attention[batch_idx][2] for batch_idx in range(sequence_output.size(0))])
+        sequence_output_list[3] = torch.stack([batch_layer_attention[batch_idx][3] for batch_idx in range(sequence_output.size(0))])
+        sequence_output_list[4] = torch.stack([batch_layer_attention[batch_idx][4] for batch_idx in range(sequence_output.size(0))])
+        sequence_output_list[5] = torch.stack([batch_layer_attention[batch_idx][5] for batch_idx in range(sequence_output.size(0))])
+        # sequence_output_list is of size 4
 
         batch_size = input_ids.size(0)
         if ("passage_span_extraction" in self.answering_abilities or "question_span" in self.answering_abilities) and self.use_gcn:
@@ -191,6 +209,7 @@ class NumericallyAugmentedBertNet(nn.Module):
             new_graph_mask = all_number_mask.unsqueeze(1) * all_number_mask.unsqueeze(-1) * new_graph_mask
 
             # iteration
+            # TODO the use of GCN
             d_node, q_node, d_node_weight, _ = self._gcn(d_node=encoded_numbers, q_node=question_encoded_number,
                 d_node_mask=number_mask, q_node_mask=question_number_mask, graph=new_graph_mask)
             gcn_info_vec = torch.zeros((batch_size, sequence_alg.size(1) + 1, sequence_output_list[-1].size(-1)),
