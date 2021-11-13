@@ -44,7 +44,7 @@ BERT_CONFIG="--roberta_model ${DATA_DIR}/roberta"
 
 
 echo "Start training..."
-CUDA_VISIBLE_DEVICES=0 python ${CODE_DIR}/roberta_gcn_cli.py \
+CUDA_VISIBLE_DEVICES=1 python ${CODE_DIR}/roberta_gcn_cli.py \
     ${DATA_CONFIG} \
     ${TRAIN_CONFIG} \
     ${BERT_CONFIG} \

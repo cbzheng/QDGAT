@@ -11,39 +11,29 @@ class DropBatchGen(object):
         self.padding_idx = padding_idx
         self.is_train = data_mode == "train"
         self.vocab_size = len(tokenizer)
-        dpath = "./data/pretrain.pkl"
+        # dpath = "./data/pretrain.pkl"
         all_data = []
 
-        with open(dpath, "rb") as f:
-            print("Load data from {}.".format(dpath))
-            data = pickle.load(f)
-
-        for item in data:
-            question_tokens = tokenizer.convert_tokens_to_ids(item["question_tokens"])
-            passage_tokens = tokenizer.convert_tokens_to_ids(item["passage_tokens"])
-            all_data.append((question_tokens, passage_tokens, item))
-
-
         if data_mode == "train":
-            with open(dpath, "rb") as f:
-                print("Load data from {}.".format(dpath))
-                data = pickle.load(f)
+            # with open(dpath, "rb") as f:
+            #     print("Load data from {}.".format(dpath))
+            #     data = pickle.load(f)
 
-            for item in data:
-                question_tokens = tokenizer.convert_tokens_to_ids(item["question_tokens"])
-                passage_tokens = tokenizer.convert_tokens_to_ids(item["passage_tokens"])
-                all_data.append((question_tokens, passage_tokens, item))
-            # for _i in range(5):
-            #     if _i != cross_index:
-            #         dpath = "{}_cv_{}.pkl".format(data_mode, _i)
-            #         with open(os.path.join(args.data_dir, dpath), "rb") as f:
-            #             print("Load data from {}.".format(dpath))
-            #             data = pickle.load(f)
+            # for item in data:
+            #     question_tokens = tokenizer.convert_tokens_to_ids(item["question_tokens"])
+            #     passage_tokens = tokenizer.convert_tokens_to_ids(item["passage_tokens"])
+            #     all_data.append((question_tokens, passage_tokens, item))
+            for _i in range(5):
+                if _i != cross_index:
+                    dpath = "{}_cv_{}.pkl".format(data_mode, _i)
+                    with open(os.path.join(args.data_dir, dpath), "rb") as f:
+                        print("Load data from {}.".format(dpath))
+                        data = pickle.load(f)
 
-            #         for item in data:
-            #             question_tokens = tokenizer.convert_tokens_to_ids(item["question_tokens"])
-            #             passage_tokens = tokenizer.convert_tokens_to_ids(item["passage_tokens"])
-            #             all_data.append((question_tokens, passage_tokens, item))
+                    for item in data:
+                        question_tokens = tokenizer.convert_tokens_to_ids(item["question_tokens"])
+                        passage_tokens = tokenizer.convert_tokens_to_ids(item["passage_tokens"])
+                        all_data.append((question_tokens, passage_tokens, item))
         else: # data_mode == "dev":
             dpath = "{}_cv_{}.pkl".format(data_mode, cross_index)
             with open(os.path.join(args.data_dir, dpath), "rb") as f:
