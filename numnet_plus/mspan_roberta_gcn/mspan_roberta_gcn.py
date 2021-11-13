@@ -3,7 +3,7 @@ import torch.nn as nn
 from typing import List, Dict, Any
 from tools import allennlp as util
 import torch.nn.functional as F
-from mspan_roberta_gcn.util import FFNLayer, GCN, ResidualGRU
+from mspan_roberta_gcn.util import HGT, FFNLayer, GCN, ResidualGRU
 from tools.utils import DropEmAndF1
 
 
@@ -88,6 +88,7 @@ class NumericallyAugmentedBertNet(nn.Module):
                  dropout_prob: float = 0.1,
                  answering_abilities: List[str] = None,
                  use_gcn: bool = False,
+                 use_hgt: bool = False,
                  gcn_steps: int = 1) -> None:
         super(NumericallyAugmentedBertNet, self).__init__()
         self.use_gcn = use_gcn
@@ -119,10 +120,13 @@ class NumericallyAugmentedBertNet(nn.Module):
 
         self._dropout = torch.nn.Dropout(p=dropout_prob)
 
+
         if self.use_gcn:
             node_dim = modeling_out_dim
 
             self._gcn_input_proj = nn.Linear(node_dim * 2, node_dim)
+            if use_hgt:
+                self._gcn = HGT(node_dim=node_dim, iteration_steps=gcn_steps)
             self._gcn = GCN(node_dim=node_dim, iteration_steps=gcn_steps)
             self._iteration_steps = gcn_steps
             self._proj_ln = nn.LayerNorm(node_dim)
@@ -134,15 +138,10 @@ class NumericallyAugmentedBertNet(nn.Module):
         self._proj_sequence_h = nn.Linear(hidden_size, 1, bias=False)
         self._proj_number = nn.Linear(hidden_size*2, 1, bias=False)
 
-# TODO change the weight 
         self._proj_sequence_g0 = FFNLayer(hidden_size, hidden_size, 1, dropout_prob)
         self._proj_sequence_g1 = FFNLayer(hidden_size, hidden_size, 1, dropout_prob)
         self._proj_sequence_g2 = FFNLayer(hidden_size, hidden_size, 1, dropout_prob)
 
-        # self._emb_seq_g0 = FFNLayer(hidden_size * 2, hidden_size * 2, hidden_size, dropout_prob)
-        # self._emb_seq_g1 = FFNLayer(hidden_size * 2, hidden_size * 2, hidden_size, dropout_prob)
-        # self._emb_seq_g2 = FFNLayer(hidden_size * 2, hidden_size * 2, hidden_size, dropout_prob)
-        # self._emb_seq_g3 = FFNLayer(hidden_size * 2, hidden_size * 2, hidden_size, dropout_prob)
         self.encoder_layer = nn.TransformerEncoderLayer(d_model=hidden_size, nhead=2)
         # span num extraction
         self._proj_span_num = FFNLayer( 3 * hidden_size, hidden_size, 9, dropout_prob)
@@ -209,7 +208,6 @@ class NumericallyAugmentedBertNet(nn.Module):
             new_graph_mask = all_number_mask.unsqueeze(1) * all_number_mask.unsqueeze(-1) * new_graph_mask
 
             # iteration
-            # TODO the use of GCN
             d_node, q_node, d_node_weight, _ = self._gcn(d_node=encoded_numbers, q_node=question_encoded_number,
                 d_node_mask=number_mask, q_node_mask=question_number_mask, graph=new_graph_mask)
             gcn_info_vec = torch.zeros((batch_size, sequence_alg.size(1) + 1, sequence_output_list[-1].size(-1)),

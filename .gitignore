@@ -12,7 +12,9 @@ bfg.jar
 __pycache__/
 *.py[cod]
 *$py.class
-
+*pt
+*ot
+args.json
 # C extensions
 *.so
 

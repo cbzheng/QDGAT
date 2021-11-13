@@ -10,7 +10,7 @@ from tag_mspan_robert_gcn.roberta_batch_gen_tmspan import DropBatchGen as TDropB
 from tag_mspan_robert_gcn.tag_mspan_roberta_gcn import NumericallyAugmentedBertNet as TNumericallyAugmentedBertNet
 from datetime import datetime
 from tools.utils import create_logger, set_environment
-from pytorch_transformers import RobertaTokenizer, RobertaModel
+from transformers import RobertaTokenizer, AutoModel
 
 
 parser = argparse.ArgumentParser("Bert training task.")
@@ -41,12 +41,19 @@ def main():
     cross_validation_length = 5 # 5 subsets
     cross_avg_f1 = [float("-inf")] * cross_validation_length
     cross_avg_em = [float("-inf")] * cross_validation_length
+    # import debugpy
+    # logger.info('debug')
+    # debugpy.listen(8910)
+    # debugpy.wait_for_client()
 
     for i in range(cross_validation_length):
         logger.info("\n----------------------- Cross Validation with dev index: {} -----------------------\n".format(i))
         best_f1 = float("-inf")
         best_em = float("-inf")
         logger.info("Loading data...")
+
+        
+
         if not args.tag_mspan:
             train_itr = DropBatchGen(args, data_mode="train", tokenizer=tokenizer, cross_index=i)
             dev_itr = DropBatchGen(args, data_mode="dev", tokenizer=tokenizer, cross_index=i)
@@ -57,7 +64,7 @@ def main():
         logger.info("Num update steps {}!".format(num_train_steps))
 
         logger.info("Build bert model.")
-        bert_model = RobertaModel.from_pretrained(args.roberta_model)
+        bert_model = AutoModel.from_pretrained(args.roberta_model)
 
         logger.info("Build Drop model.")
         if not args.tag_mspan:
