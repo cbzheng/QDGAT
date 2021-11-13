@@ -92,6 +92,7 @@ class NumericallyAugmentedBertNet(nn.Module):
                  gcn_steps: int = 1) -> None:
         super(NumericallyAugmentedBertNet, self).__init__()
         self.use_gcn = use_gcn
+        self.use_hgt = use_hgt
         self.bert = bert
         modeling_out_dim = hidden_size
         self._drop_metrics = DropEmAndF1()
@@ -121,13 +122,14 @@ class NumericallyAugmentedBertNet(nn.Module):
         self._dropout = torch.nn.Dropout(p=dropout_prob)
 
 
-        if self.use_gcn:
+        if self.use_gcn or self.use_hgt:
             node_dim = modeling_out_dim
 
             self._gcn_input_proj = nn.Linear(node_dim * 2, node_dim)
             if use_hgt:
                 self._gcn = HGT(node_dim=node_dim, iteration_steps=gcn_steps)
-            self._gcn = GCN(node_dim=node_dim, iteration_steps=gcn_steps)
+            else:
+                self._gcn = GCN(node_dim=node_dim, iteration_steps=gcn_steps)
             self._iteration_steps = gcn_steps
             self._proj_ln = nn.LayerNorm(node_dim)
             self._proj_ln0 = nn.LayerNorm(node_dim)
@@ -181,7 +183,7 @@ class NumericallyAugmentedBertNet(nn.Module):
         # sequence_output_list is of size 4
 
         batch_size = input_ids.size(0)
-        if ("passage_span_extraction" in self.answering_abilities or "question_span" in self.answering_abilities) and self.use_gcn:
+        if ("passage_span_extraction" in self.answering_abilities or "question_span" in self.answering_abilities) and (self.use_gcn or self.use_hgt):
             # M2, M3
             sequence_alg = self._gcn_input_proj(torch.cat([sequence_output_list[2], sequence_output_list[3]], dim=2))
             encoded_passage_for_numbers = sequence_alg
