@@ -183,7 +183,6 @@ class NumericallyAugmentedBertNet(nn.Module):
         batch_layer_attention = []
         for batch_idx in range(sequence_output.size(0)):
             batch_layers = torch.stack([sequence_output_list[i][batch_idx] for i in range(6)])
-            # TODO
             batch_layers = self.encoder_layer(batch_layers)
             batch_layer_attention.append(batch_layers)
         

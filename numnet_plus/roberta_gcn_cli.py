@@ -87,8 +87,6 @@ def main():
         logger.info("Build optimizer etc...")
         model = DropBertModel(args, network, num_train_step=num_train_steps)
 
-        model.network.load_state_dict(torch.load('./pretrained/checkpoint_best.pt'))
-
         train_start = datetime.now()
         first = True
 
