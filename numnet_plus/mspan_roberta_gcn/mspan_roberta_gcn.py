@@ -138,16 +138,26 @@ class NumericallyAugmentedBertNet(nn.Module):
             self._gcn_enc = ResidualGRU(hidden_size, dropout_prob, 2)
         # add bert proj
         self._proj_sequence_h = nn.Linear(hidden_size, 1, bias=False)
+        # sequence mix
+        self._proj_sequence_m = nn.Linear(hidden_size * 3, hidden_size, bias=True) #
         self._proj_number = nn.Linear(hidden_size*2, 1, bias=False)
 
         self._proj_sequence_g0 = FFNLayer(hidden_size, hidden_size, 1, dropout_prob)
         self._proj_sequence_g1 = FFNLayer(hidden_size, hidden_size, 1, dropout_prob)
         self._proj_sequence_g2 = FFNLayer(hidden_size, hidden_size, 1, dropout_prob)
 
+        # passage mix
+        self._proj_extra_m0 = nn.Linear(hidden_size * 2, hidden_size, bias=True) # 
+        self._proj_extra_m1 = nn.Linear(hidden_size * 2, hidden_size, bias=True) #
+        self._proj_extra_m2 = nn.Linear(hidden_size * 2, hidden_size, bias=True) #
+
         self.encoder_layer = nn.TransformerEncoderLayer(d_model=hidden_size, nhead=2)
         # span num extraction
         self._proj_span_num = FFNLayer( 3 * hidden_size, hidden_size, 9, dropout_prob)
 
+        # number encoding
+        self._proj_number_e0 = nn.Linear(hidden_size * 2, hidden_size, bias=True) #
+        self._proj_number_e1 = nn.Linear(hidden_size * 2, hidden_size, bias=True) #
     def forward(self,  # type: ignore
                 input_ids: torch.LongTensor,
                 input_mask: torch.LongTensor,
@@ -176,16 +186,16 @@ class NumericallyAugmentedBertNet(nn.Module):
             self.encoder_layer(batch_layers)
             batch_layer_attention.append(batch_layers)
         
-        sequence_output_list[2] = torch.stack([batch_layer_attention[batch_idx][2] for batch_idx in range(sequence_output.size(0))])
-        sequence_output_list[3] = torch.stack([batch_layer_attention[batch_idx][3] for batch_idx in range(sequence_output.size(0))])
-        sequence_output_list[4] = torch.stack([batch_layer_attention[batch_idx][4] for batch_idx in range(sequence_output.size(0))])
-        sequence_output_list[5] = torch.stack([batch_layer_attention[batch_idx][5] for batch_idx in range(sequence_output.size(0))])
+        sequence_output_list[-4] = torch.stack([batch_layer_attention[batch_idx][2] for batch_idx in range(sequence_output.size(0))])
+        sequence_output_list[-3] = torch.stack([batch_layer_attention[batch_idx][3] for batch_idx in range(sequence_output.size(0))])
+        sequence_output_list[-2] = torch.stack([batch_layer_attention[batch_idx][4] for batch_idx in range(sequence_output.size(0))])
+        sequence_output_list[-1] = torch.stack([batch_layer_attention[batch_idx][5] for batch_idx in range(sequence_output.size(0))])
         # sequence_output_list is of size 4
 
         batch_size = input_ids.size(0)
         if ("passage_span_extraction" in self.answering_abilities or "question_span" in self.answering_abilities) and (self.use_gcn or self.use_hgt):
             # M2, M3
-            sequence_alg = self._gcn_input_proj(torch.cat([sequence_output_list[2], sequence_output_list[3]], dim=2))
+            sequence_alg = self._gcn_input_proj(torch.cat([sequence_output_list[-2], sequence_output_list[-1]], dim=2))
             encoded_passage_for_numbers = sequence_alg
             encoded_question_for_numbers = sequence_alg
             # passage number extraction
@@ -219,30 +229,43 @@ class NumericallyAugmentedBertNet(nn.Module):
             gcn_info_vec.scatter_(1, clamped_number_indices.unsqueeze(-1).expand(-1, -1, d_node.size(-1)), d_node)
             gcn_info_vec = gcn_info_vec[:, :-1, :]
 
-            sequence_output_list[2] = self._gcn_enc(self._proj_ln(sequence_output_list[2] + gcn_info_vec))
-            sequence_output_list[0] = self._gcn_enc(self._proj_ln0(sequence_output_list[0] + gcn_info_vec))
-            sequence_output_list[1] = self._gcn_enc(self._proj_ln1(sequence_output_list[1] + gcn_info_vec))
-            sequence_output_list[3] = self._gcn_enc(self._proj_ln3(sequence_output_list[3] + gcn_info_vec))
+            sequence_output_list[-2] = self._gcn_enc(self._proj_ln(sequence_output_list[-2] + gcn_info_vec))
+            sequence_output_list[-4] = self._gcn_enc(self._proj_ln0(sequence_output_list[-4] + gcn_info_vec))
+            sequence_output_list[-3] = self._gcn_enc(self._proj_ln1(sequence_output_list[-3] + gcn_info_vec))
+            sequence_output_list[-1] = self._gcn_enc(self._proj_ln3(sequence_output_list[-1] + gcn_info_vec))
 
         # passage hidden and question hidden
-        sequence_h2_weight = self._proj_sequence_h(sequence_output_list[2]).squeeze(-1)
+        hidden_temp = self._proj_sequence_m(torch.cat([sequence_output_list[_] for _ in range(-4, -1)], 2))
+        # sequence_h2_weight = self._proj_sequence_h(sequence_output_list[-2]).squeeze(-1)
+        sequence_h2_weight = self._proj_sequence_h(hidden_temp).squeeze(-1)
         passage_h2_weight = util.masked_softmax(sequence_h2_weight, passage_mask)
-        passage_h2 = util.weighted_sum(sequence_output_list[2], passage_h2_weight)
+        # passage_h2 = util.weighted_sum(sequence_output_list[-2], passage_h2_weight)
+        passage_h2 = util.weighted_sum(hidden_temp, passage_h2_weight)
         question_h2_weight = util.masked_softmax(sequence_h2_weight, question_mask)
-        question_h2 = util.weighted_sum(sequence_output_list[2], question_h2_weight)
+        # question_h2 = util.weighted_sum(sequence_output_list[-2], question_h2_weight)
+        question_h2 = util.weighted_sum(hidden_temp, question_h2_weight)
 
         # passage g0, g1, g2
-        question_g0_weight = self._proj_sequence_g0(sequence_output_list[0]).squeeze(-1)
+        g0_input_mix = self._proj_extra_m0(torch.cat([sequence_output_list[-6], sequence_output_list[-4]], 2))
+        # question_g0_weight = self._proj_sequence_g0(sequence_output_list[0]).squeeze(-1)
+        question_g0_weight = self._proj_sequence_g0(g0_input_mix).squeeze(-1)
         question_g0_weight = util.masked_softmax(question_g0_weight, question_mask)
-        question_g0 = util.weighted_sum(sequence_output_list[0], question_g0_weight)
+        # question_g0 = util.weighted_sum(sequence_output_list[-4], question_g0_weight)
+        question_g0 = util.weighted_sum(g0_input_mix, question_g0_weight)
 
-        question_g1_weight = self._proj_sequence_g1(sequence_output_list[1]).squeeze(-1)
+        g1_input_mix = self._proj_extra_m1(torch.cat([sequence_output_list[-5], sequence_output_list[-3]], 2))
+        # question_g1_weight = self._proj_sequence_g1(sequence_output_list[-3]).squeeze(-1)
+        question_g1_weight = self._proj_sequence_g1(g1_input_mix).squeeze(-1)
         question_g1_weight = util.masked_softmax(question_g1_weight, question_mask)
-        question_g1 = util.weighted_sum(sequence_output_list[1], question_g1_weight)
+        # question_g1 = util.weighted_sum(sequence_output_list[-3], question_g1_weight)
+        question_g1 = util.weighted_sum(g1_input_mix, question_g1_weight)
 
-        question_g2_weight = self._proj_sequence_g2(sequence_output_list[2]).squeeze(-1)
+        g2_input_mix = self._proj_extra_m2(torch.cat([sequence_output_list[-4], sequence_output_list[-2]], 2))
+        # question_g2_weight = self._proj_sequence_g2(sequence_output_list[-2]).squeeze(-1)
+        question_g2_weight = self._proj_sequence_g2(g2_input_mix).squeeze(-1)
         question_g2_weight = util.masked_softmax(question_g2_weight, question_mask)
-        question_g2 = util.weighted_sum(sequence_output_list[2], question_g2_weight)
+        # question_g2 = util.weighted_sum(sequence_output_list[-2], question_g2_weight)
+        question_g2 = util.weighted_sum(g2_input_mix, question_g2_weight)
 
 
         if len(self.answering_abilities) > 1:
@@ -254,7 +277,10 @@ class NumericallyAugmentedBertNet(nn.Module):
         real_number_indices = number_indices.squeeze(-1) - 1
         number_mask = (real_number_indices > -1).long()
         clamped_number_indices = util.replace_masked_values(real_number_indices, number_mask, 0)
-        encoded_passage_for_numbers = torch.cat([sequence_output_list[2], sequence_output_list[3]], dim=-1)
+        encode_part1 = self._proj_number_e0(torch.cat([sequence_output_list[-4], sequence_output_list[-2]], 2))
+        encode_part2 = self._proj_number_e1(torch.cat([sequence_output_list[-3], sequence_output_list[-1]], 2))
+        # encoded_passage_for_numbers = torch.cat([sequence_output_list[-2], sequence_output_list[-1]], dim=-1)
+        encoded_passage_for_numbers = torch.cat([encode_part1, encode_part2], dim=-1)
         encoded_numbers = torch.gather(encoded_passage_for_numbers, 1,
             clamped_number_indices.unsqueeze(-1).expand(-1, -1, encoded_passage_for_numbers.size(-1)))
         number_weight = self._proj_number(encoded_numbers).squeeze(-1)
@@ -275,18 +301,18 @@ class NumericallyAugmentedBertNet(nn.Module):
 
         if "passage_span_extraction" in self.answering_abilities or "question_span_extraction" in self.answering_abilities:
             # start 0, 2
-            sequence_for_span_start = torch.cat([sequence_output_list[2],
-                                                 sequence_output_list[0],
-                                                 sequence_output_list[2]*question_g2.unsqueeze(1),
-                                                 sequence_output_list[0]*question_g0.unsqueeze(1)],
-                                     dim=2)
-            sequence_span_start_logits = self._span_start_predictor(sequence_for_span_start).squeeze(-1)
+            sequence_for_span_start = torch.cat([g2_input_mix,
+                                                 g0_input_mix,
+                                                 g2_input_mix*question_g2.unsqueeze(1),
+                                                 g0_input_mix*question_g0.unsqueeze(1)],
+                                     dim=2) # (4, 435, 3072), with each (4, 435, 768)
+            sequence_span_start_logits = self._span_start_predictor(sequence_for_span_start).squeeze(-1) # (4, 435)
             # Shape: (batch_size, passage_length, modeling_dim * 2)
-            sequence_for_span_end = torch.cat([sequence_output_list[2],
-                                               sequence_output_list[1],
-                                               sequence_output_list[2]*question_g2.unsqueeze(1),
-                                               sequence_output_list[1]*question_g1.unsqueeze(1)],
-                                            dim=2)
+            sequence_for_span_end = torch.cat([g2_input_mix,
+                                               g1_input_mix,
+                                               g2_input_mix*question_g2.unsqueeze(1),
+                                               g1_input_mix*question_g1.unsqueeze(1)],
+                                            dim=2) # (4, 435, 3072), with each (4, 435, 768)
             # Shape: (batch_size, passage_length)
             sequence_span_end_logits = self._span_end_predictor(sequence_for_span_end).squeeze(-1)
             # Shape: (batch_size, passage_length)
