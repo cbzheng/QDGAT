@@ -11,6 +11,7 @@ from tag_mspan_robert_gcn.tag_mspan_roberta_gcn import NumericallyAugmentedBertN
 from datetime import datetime
 from tools.utils import create_logger, set_environment
 from transformers import RobertaTokenizer, AutoModel
+import torch
 
 
 parser = argparse.ArgumentParser("Bert training task.")
@@ -43,7 +44,7 @@ def main():
     cross_avg_em = [float("-inf")] * cross_validation_length
     # import debugpy
     # logger.info('debug')
-    # debugpy.listen(8910)
+    # debugpy.listen(5678)
     # debugpy.wait_for_client()
 
     for i in range(cross_validation_length):
@@ -81,8 +82,12 @@ def main():
                                                 use_gcn=args.use_gcn,
                                                 gcn_steps=args.gcn_steps)
 
+
+    
         logger.info("Build optimizer etc...")
         model = DropBertModel(args, network, num_train_step=num_train_steps)
+
+        model.network.load_state_dict(torch.load('./pretrained/checkpoint_best.pt'))
 
         train_start = datetime.now()
         first = True
@@ -100,6 +105,11 @@ def main():
                         model.updates, model.train_loss.avg, model.em_avg.avg, model.f1_avg.avg,
                         str((datetime.now() - train_start) / (step + 1) * (num_train_steps - step - 1)).split('.')[0]))
                     model.avg_reset()
+
+                # if best_f1 < 0 and model.step % 3000 == 0:
+                #     save_prefix = os.path.join(args.save_dir, "checkpoint_best")
+                #     model.save(save_prefix, epoch)
+                #     logger.info("save model")
             total_num, eval_loss, eval_em, eval_f1 = model.evaluate(dev_itr)
             logger.info(
                 "Eval {} examples, result in epoch {}, eval loss {}, eval em {} eval f1 {}.".format(total_num, epoch,

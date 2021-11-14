@@ -12,6 +12,8 @@ class DropBatchGen(object):
         self.is_train = data_mode == "train"
         self.vocab_size = len(tokenizer)
         # dpath = "./data/pretrain.pkl"
+        # dpath = "./data/validation/train_cv_3.pkl"
+
         all_data = []
 
         if data_mode == "train":

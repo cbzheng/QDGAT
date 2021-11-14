@@ -230,6 +230,20 @@ class HGT(nn.Module):
             g = dgl.heterograph(graph_data)
             d_node_indices = torch.nonzero(d_node_mask[batch_idx]).squeeze(1)
             q_node_indices = torch.nonzero(q_node_mask[batch_idx]).squeeze(1)
+
+            if d_node_indices.shape[0] != g.num_nodes(ntype='d') or q_node_indices.shape[0] != g.num_nodes(ntype='q'):
+                pad_size = d_node_len
+                paddings = torch.zeros(pad_size, self.node_dim)
+                d_out = paddings.to(d_node.device)
+
+                pad_size = q_node_len
+                paddings = torch.zeros(pad_size, self.node_dim)
+                q_out = paddings.to(q_node.device)
+
+                q_batch_embs.append(q_out)
+                d_batch_embs.append(d_out)
+                continue
+
             g.nodes['d'].data['inp'] = d_node[batch_idx][d_node_indices]
             g.nodes['q'].data['inp'] = q_node[batch_idx][q_node_indices]
 
