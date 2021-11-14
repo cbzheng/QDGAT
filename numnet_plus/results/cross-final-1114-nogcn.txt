@@ -1,0 +1,380 @@
+Start training...
+Namespace(batch_size=4, bert_learning_rate=1.5e-05, bert_weight_decay=0.01, cuda=True, data_dir='./data/validation', dropout=0.1, eps=1e-06, eval_batch_size=5, gcn_steps=1, gpu_num=1, grad_clipping=1.0, gradient_accumulation_steps=4, learning_rate=0.0005, log_file='train.log', log_per_updates=100, max_epoch=5, optimizer='adam', pre_path=None, roberta_model='./data/validation/roberta', save_dir='./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01', seed=345, tag_mspan=False, use_gcn=False, warmup=0.06, warmup_schedule='warmup_linear', weight_decay=5e-05)
+11/14/2021 12:07:49 
+----------------------- Cross Validation with dev index: 0 -----------------------
+
+11/14/2021 12:07:49 Loading data...
+Load data from train_cv_1.pkl.
+Load data from train_cv_2.pkl.
+Load data from train_cv_3.pkl.
+Load data from train_cv_4.pkl.
+Load data size 13509.
+Load data from dev_cv_0.pkl.
+Load data size 3268.
+11/14/2021 12:07:57 Num update steps 4222!
+11/14/2021 12:07:57 Build bert model.
+11/14/2021 12:08:03 Build Drop model.
+11/14/2021 12:08:03 Build optimizer etc...
+11/14/2021 12:08:08 At epoch 1
+11/14/2021 12:08:10 Updates[     0] train loss[2499998.50000] train em[0.75000] f1[0.75000] remaining[1:36:14]
+11/14/2021 12:10:31 Updates[   100] train loss[601504.80666] train em[0.62406] f1[0.65580] remaining[0:22:40]
+11/14/2021 12:12:53 Updates[   200] train loss[712501.17161] train em[0.57625] f1[0.60947] remaining[0:20:17]
+11/14/2021 12:15:17 Updates[   300] train loss[687501.35498] train em[0.55063] f1[0.58594] remaining[0:17:58]
+11/14/2021 12:17:42 Updates[   400] train loss[625001.28548] train em[0.58250] f1[0.60994] remaining[0:15:40]
+11/14/2021 12:20:06 Updates[   500] train loss[650001.18319] train em[0.56000] f1[0.59396] remaining[0:13:17]
+11/14/2021 12:22:28 Updates[   600] train loss[668751.03979] train em[0.58875] f1[0.62197] remaining[0:10:52]
+11/14/2021 12:24:50 Updates[   700] train loss[475001.20469] train em[0.60813] f1[0.63922] remaining[0:08:28]
+11/14/2021 12:27:12 Updates[   800] train loss[618751.16467] train em[0.57812] f1[0.61226] remaining[0:06:05]
+11/14/2021 12:29:33 Eval 3268 examples, result in epoch 1, eval loss 758411.0387289715, eval em 0.5881272949816402 eval f1 0.6184271725826196.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 12:29:40 Best eval F1 0.6184271725826196, and eval EM 0.5881272949816402 at epoch 1
+11/14/2021 12:29:40 At epoch 2
+11/14/2021 12:30:58 Updates[   900] train loss[709460.19913] train em[0.66892] f1[0.70131] remaining[6:51:08]
+11/14/2021 12:33:20 Updates[  1000] train loss[712500.53105] train em[0.65375] f1[0.69175] remaining[2:25:50]
+11/14/2021 12:35:44 Updates[  1100] train loss[537500.66621] train em[0.67500] f1[0.70468] remaining[1:26:23]
+11/14/2021 12:38:07 Updates[  1200] train loss[625000.69971] train em[0.63875] f1[0.67035] remaining[0:59:00]
+11/14/2021 12:40:28 Updates[  1300] train loss[643750.64376] train em[0.67125] f1[0.70206] remaining[0:42:34]
+11/14/2021 12:42:51 Updates[  1400] train loss[637500.66683] train em[0.66312] f1[0.69981] remaining[0:31:14]
+11/14/2021 12:45:15 Updates[  1500] train loss[625000.66913] train em[0.66312] f1[0.68969] remaining[0:22:38]
+11/14/2021 12:47:35 Updates[  1600] train loss[693750.57239] train em[0.68000] f1[0.71373] remaining[0:15:39]
+11/14/2021 12:51:02 Eval 3268 examples, result in epoch 2, eval loss 758411.0883837914, eval em 0.5817013463892289 eval f1 0.6138922888616896.
+11/14/2021 12:51:02 At epoch 3
+11/14/2021 12:51:18 Updates[  1700] train loss[511364.11708] train em[0.72727] f1[0.75659] remaining[2 days, 20:18:24]
+11/14/2021 12:53:45 Updates[  1800] train loss[643750.35444] train em[0.71437] f1[0.74241] remaining[6:28:01]
+11/14/2021 12:56:08 Updates[  1900] train loss[668750.32827] train em[0.72562] f1[0.75631] remaining[3:12:03]
+11/14/2021 12:58:30 Updates[  2000] train loss[706250.26433] train em[0.71625] f1[0.74582] remaining[2:00:33]
+11/14/2021 01:00:54 Updates[  2100] train loss[625000.38419] train em[0.71188] f1[0.74003] remaining[1:22:43]
+11/14/2021 01:03:18 Updates[  2200] train loss[606250.40098] train em[0.71750] f1[0.74201] remaining[0:58:46]
+11/14/2021 01:05:39 Updates[  2300] train loss[587500.33070] train em[0.72000] f1[0.74442] remaining[0:41:50]
+11/14/2021 01:08:02 Updates[  2400] train loss[700000.27030] train em[0.72437] f1[0.74799] remaining[0:29:01]
+11/14/2021 01:10:24 Updates[  2500] train loss[631250.39362] train em[0.70250] f1[0.73031] remaining[0:18:46]
+11/14/2021 01:12:26 Eval 3268 examples, result in epoch 3, eval loss 758411.2086259935, eval em 0.6138310893512852 eval f1 0.6440820073439413.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 01:12:33 Best eval F1 0.6440820073439413, and eval EM 0.6138310893512852 at epoch 3
+11/14/2021 01:12:33 At epoch 4
+11/14/2021 01:14:07 Updates[  2600] train loss[648496.43149] train em[0.72932] f1[0.76234] remaining[16:21:18]
+11/14/2021 01:16:30 Updates[  2700] train loss[756250.14159] train em[0.74375] f1[0.76766] remaining[6:04:58]
+11/14/2021 01:18:53 Updates[  2800] train loss[575000.16995] train em[0.75375] f1[0.78030] remaining[3:29:25]
+11/14/2021 01:21:15 Updates[  2900] train loss[650000.13156] train em[0.76313] f1[0.78648] remaining[2:17:27]
+11/14/2021 01:23:41 Updates[  3000] train loss[631250.22136] train em[0.75125] f1[0.77611] remaining[1:35:22]
+11/14/2021 01:26:06 Updates[  3100] train loss[525000.14222] train em[0.77625] f1[0.79961] remaining[1:07:17]
+11/14/2021 01:28:30 Updates[  3200] train loss[693750.19307] train em[0.74625] f1[0.77034] remaining[0:46:54]
+11/14/2021 01:30:49 Updates[  3300] train loss[656250.17689] train em[0.74875] f1[0.77389] remaining[0:31:10]
+11/14/2021 01:33:55 Eval 3268 examples, result in epoch 4, eval loss 758411.4334385891, eval em 0.6104651162790697 eval f1 0.6386383108935131.
+11/14/2021 01:33:55 At epoch 5
+11/14/2021 01:34:27 Updates[  3400] train loss[625000.06295] train em[0.77557] f1[0.79773] remaining[2 days, 19:34:22]
+11/14/2021 01:36:51 Updates[  3500] train loss[525000.11297] train em[0.78375] f1[0.80546] remaining[11:18:47]
+11/14/2021 01:39:14 Updates[  3600] train loss[618749.99151] train em[0.78000] f1[0.80559] remaining[5:42:01]
+11/14/2021 01:41:38 Updates[  3700] train loss[668750.01990] train em[0.77625] f1[0.79780] remaining[3:32:57]
+11/14/2021 01:44:03 Updates[  3800] train loss[699999.94616] train em[0.77563] f1[0.80032] remaining[2:23:57]
+11/14/2021 01:46:26 Updates[  3900] train loss[612500.00759] train em[0.78312] f1[0.80801] remaining[1:40:27]
+11/14/2021 01:48:50 Updates[  4000] train loss[656250.08231] train em[0.78063] f1[0.80148] remaining[1:10:10]
+11/14/2021 01:51:13 Updates[  4100] train loss[631250.08297] train em[0.77312] f1[0.79516] remaining[0:47:36]
+11/14/2021 01:53:39 Updates[  4200] train loss[712500.00374] train em[0.76812] f1[0.79500] remaining[0:29:58]
+11/14/2021 01:55:27 Eval 3268 examples, result in epoch 5, eval loss 758411.5579080458, eval em 0.6077111383108935 eval f1 0.636309669522644.
+11/14/2021 01:55:27 done training in 6438 seconds!
+11/14/2021 01:55:27 
+----------------------- Cross Validation with dev index: 1 -----------------------
+
+11/14/2021 01:55:27 Loading data...
+Load data from train_cv_0.pkl.
+Load data from train_cv_2.pkl.
+Load data from train_cv_3.pkl.
+Load data from train_cv_4.pkl.
+Load data size 13073.
+Load data from dev_cv_1.pkl.
+Load data size 3711.
+11/14/2021 01:55:35 Num update steps 4086!
+11/14/2021 01:55:35 Build bert model.
+11/14/2021 01:55:41 Build Drop model.
+11/14/2021 01:55:41 Build optimizer etc...
+11/14/2021 01:55:44 At epoch 1
+11/14/2021 01:55:45 Updates[     0] train loss[-0.06143] train em[0.75000] f1[0.75000] remaining[0:19:44]
+11/14/2021 01:58:08 Updates[   100] train loss[513785.65950] train em[0.62155] f1[0.65720] remaining[0:22:02]
+11/14/2021 02:00:37 Updates[   200] train loss[631251.35183] train em[0.56188] f1[0.60086] remaining[0:20:00]
+11/14/2021 02:03:02 Updates[   300] train loss[512501.38227] train em[0.55375] f1[0.58319] remaining[0:17:33]
+11/14/2021 02:05:29 Updates[   400] train loss[625001.37470] train em[0.55937] f1[0.58844] remaining[0:15:08]
+11/14/2021 02:07:54 Updates[   500] train loss[593751.15344] train em[0.58188] f1[0.61419] remaining[0:12:41]
+11/14/2021 02:10:19 Updates[   600] train loss[612501.26845] train em[0.58500] f1[0.61178] remaining[0:10:14]
+11/14/2021 02:12:45 Updates[   700] train loss[700001.20643] train em[0.57125] f1[0.60105] remaining[0:07:48]
+11/14/2021 02:15:12 Updates[   800] train loss[593751.08490] train em[0.60062] f1[0.63397] remaining[0:05:23]
+11/14/2021 02:16:55 Eval 3711 examples, result in epoch 1, eval loss 904442.4971057049, eval em 0.6095392077607114 eval f1 0.6458124494745355.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 02:17:06 Best eval F1 0.6458124494745355, and eval EM 0.6095392077607114 at epoch 1
+11/14/2021 02:17:06 At epoch 2
+11/14/2021 02:19:13 Updates[   900] train loss[687311.89356] train em[0.63746] f1[0.66814] remaining[4:26:17]
+11/14/2021 02:21:35 Updates[  1000] train loss[500000.75487] train em[0.66187] f1[0.69084] remaining[1:58:35]
+11/14/2021 02:23:58 Updates[  1100] train loss[575000.54188] train em[0.67937] f1[0.70854] remaining[1:13:45]
+11/14/2021 02:26:23 Updates[  1200] train loss[668750.67453] train em[0.66438] f1[0.69492] remaining[0:51:08]
+11/14/2021 02:28:50 Updates[  1300] train loss[612500.79243] train em[0.64875] f1[0.68308] remaining[0:36:55]
+11/14/2021 02:31:16 Updates[  1400] train loss[562500.63311] train em[0.67688] f1[0.70659] remaining[0:26:44]
+11/14/2021 02:33:41 Updates[  1500] train loss[593750.69925] train em[0.66563] f1[0.69944] remaining[0:18:49]
+11/14/2021 02:36:05 Updates[  1600] train loss[581250.66901] train em[0.67188] f1[0.70606] remaining[0:12:18]
+11/14/2021 02:38:15 Eval 3711 examples, result in epoch 2, eval loss 904442.502765533, eval em 0.6162759364052816 eval f1 0.6527000808407444.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 02:38:26 Best eval F1 0.6527000808407444, and eval EM 0.6162759364052816 at epoch 2
+11/14/2021 02:38:26 At epoch 3
+11/14/2021 02:40:04 Updates[  1700] train loss[658397.31821] train em[0.69275] f1[0.72200] remaining[10:47:03]
+11/14/2021 02:42:31 Updates[  1800] train loss[625000.42968] train em[0.70437] f1[0.72688] remaining[4:01:54]
+11/14/2021 02:44:56 Updates[  1900] train loss[662500.30916] train em[0.72688] f1[0.75781] remaining[2:20:03]
+11/14/2021 02:47:24 Updates[  2000] train loss[581250.29991] train em[0.73250] f1[0.75639] remaining[1:32:42]
+11/14/2021 02:49:51 Updates[  2100] train loss[687500.42983] train em[0.70063] f1[0.72777] remaining[1:04:37]
+11/14/2021 02:52:15 Updates[  2200] train loss[556250.37533] train em[0.73500] f1[0.75909] remaining[0:45:34]
+11/14/2021 02:54:39 Updates[  2300] train loss[500000.44630] train em[0.71688] f1[0.74999] remaining[0:31:30]
+11/14/2021 02:57:03 Updates[  2400] train loss[518750.38581] train em[0.71937] f1[0.75136] remaining[0:20:30]
+11/14/2021 02:59:37 Eval 3711 examples, result in epoch 3, eval loss 904442.6025535726, eval em 0.6308272702775533 eval f1 0.6676637025060635.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 02:59:45 Best eval F1 0.6676637025060635, and eval EM 0.6308272702775533 at epoch 3
+11/14/2021 02:59:45 At epoch 4
+11/14/2021 03:00:55 Updates[  2500] train loss[569948.37326] train em[0.75389] f1[0.77490] remaining[21:54:38]
+11/14/2021 03:03:22 Updates[  2600] train loss[587500.19046] train em[0.74938] f1[0.77598] remaining[6:38:18]
+11/14/2021 03:05:47 Updates[  2700] train loss[568750.26992] train em[0.74687] f1[0.77229] remaining[3:38:10]
+11/14/2021 03:08:10 Updates[  2800] train loss[562500.16888] train em[0.75813] f1[0.77961] remaining[2:20:00]
+11/14/2021 03:10:35 Updates[  2900] train loss[618750.23254] train em[0.73438] f1[0.75775] remaining[1:35:43]
+11/14/2021 03:13:01 Updates[  3000] train loss[675000.15990] train em[0.73687] f1[0.76091] remaining[1:06:42]
+11/14/2021 03:15:28 Updates[  3100] train loss[562500.18193] train em[0.74687] f1[0.76772] remaining[0:45:54]
+11/14/2021 03:17:55 Updates[  3200] train loss[612500.10408] train em[0.76313] f1[0.78262] remaining[0:30:00]
+11/14/2021 03:20:51 Eval 3711 examples, result in epoch 4, eval loss 904442.8381926067, eval em 0.6337914308811641 eval f1 0.671169496092698.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 03:20:59 Best eval F1 0.671169496092698, and eval EM 0.6337914308811641 at epoch 4
+11/14/2021 03:20:59 At epoch 5
+11/14/2021 03:21:57 Updates[  3300] train loss[604838.82916] train em[0.78226] f1[0.80657] remaining[1 day, 21:54:19]
+11/14/2021 03:24:58 Updates[  3400] train loss[625000.01682] train em[0.76313] f1[0.78752] remaining[10:06:32]
+11/14/2021 03:28:00 Updates[  3500] train loss[662499.98373] train em[0.77563] f1[0.79618] remaining[5:15:42]
+11/14/2021 03:30:31 Updates[  3600] train loss[518750.16918] train em[0.76250] f1[0.78415] remaining[3:17:43]
+11/14/2021 03:33:00 Updates[  3700] train loss[662500.04504] train em[0.76000] f1[0.78172] remaining[2:13:14]
+11/14/2021 03:35:26 Updates[  3800] train loss[643749.98306] train em[0.78625] f1[0.80496] remaining[1:32:05]
+11/14/2021 03:38:17 Updates[  3900] train loss[650000.02223] train em[0.76438] f1[0.78994] remaining[1:03:27]
+11/14/2021 03:40:47 Updates[  4000] train loss[525000.11371] train em[0.78375] f1[0.80303] remaining[0:41:44]
+11/14/2021 03:44:22 Eval 3711 examples, result in epoch 5, eval loss 904442.9608093419, eval em 0.6340609000269469 eval f1 0.6696011856642419.
+11/14/2021 03:44:22 done training in 6517 seconds!
+11/14/2021 03:44:22 
+----------------------- Cross Validation with dev index: 2 -----------------------
+
+11/14/2021 03:44:22 Loading data...
+Load data from train_cv_0.pkl.
+Load data from train_cv_1.pkl.
+Load data from train_cv_3.pkl.
+Load data from train_cv_4.pkl.
+Load data size 13428.
+Load data from dev_cv_2.pkl.
+Load data size 3372.
+11/14/2021 03:44:57 Num update steps 4196!
+11/14/2021 03:44:57 Build bert model.
+11/14/2021 03:45:05 Build Drop model.
+11/14/2021 03:45:05 Build optimizer etc...
+11/14/2021 03:45:08 At epoch 1
+11/14/2021 03:45:09 Updates[     0] train loss[2.09607] train em[0.75000] f1[0.75000] remaining[0:44:37]
+11/14/2021 03:47:32 Updates[   100] train loss[576442.31791] train em[0.62531] f1[0.66043] remaining[0:22:47]
+11/14/2021 03:50:14 Updates[   200] train loss[687501.29425] train em[0.56250] f1[0.59741] remaining[0:21:40]
+11/14/2021 03:52:43 Updates[   300] train loss[587501.35228] train em[0.56063] f1[0.59579] remaining[0:18:56]
+11/14/2021 03:55:11 Updates[   400] train loss[750001.24408] train em[0.55437] f1[0.58481] remaining[0:16:18]
+11/14/2021 03:57:38 Updates[   500] train loss[612501.28025] train em[0.55250] f1[0.58385] remaining[0:13:43]
+11/14/2021 04:00:05 Updates[   600] train loss[575001.17164] train em[0.58813] f1[0.62159] remaining[0:11:11]
+11/14/2021 04:02:34 Updates[   700] train loss[500001.18987] train em[0.60813] f1[0.64426] remaining[0:08:41]
+11/14/2021 04:05:00 Updates[   800] train loss[593751.14110] train em[0.59188] f1[0.62971] remaining[0:06:10]
+11/14/2021 04:07:15 Eval 3372 examples, result in epoch 1, eval loss 920001.0332772309, eval em 0.5993475682087782 eval f1 0.6284608540925272.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 04:07:24 Best eval F1 0.6284608540925272, and eval EM 0.5993475682087782 at epoch 1
+11/14/2021 04:07:24 At epoch 2
+11/14/2021 04:08:52 Updates[   900] train loss[596708.43958] train em[0.67798] f1[0.70841] remaining[6:26:02]
+11/14/2021 04:11:19 Updates[  1000] train loss[568750.78255] train em[0.65375] f1[0.68335] remaining[2:24:38]
+11/14/2021 04:13:45 Updates[  1100] train loss[575000.66385] train em[0.66938] f1[0.70456] remaining[1:26:29]
+11/14/2021 04:16:11 Updates[  1200] train loss[718750.72706] train em[0.65063] f1[0.68026] remaining[0:59:13]
+11/14/2021 04:18:35 Updates[  1300] train loss[625000.75946] train em[0.65875] f1[0.69364] remaining[0:42:42]
+11/14/2021 04:21:00 Updates[  1400] train loss[650000.80825] train em[0.62875] f1[0.66026] remaining[0:31:13]
+11/14/2021 04:23:25 Updates[  1500] train loss[556250.66916] train em[0.66687] f1[0.70090] remaining[0:22:29]
+11/14/2021 04:25:50 Updates[  1600] train loss[631250.70290] train em[0.66438] f1[0.69916] remaining[0:15:25]
+11/14/2021 04:29:01 Eval 3372 examples, result in epoch 2, eval loss 920001.0535963235, eval em 0.6186239620403321 eval f1 0.6475296559905103.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 04:29:10 Best eval F1 0.6475296559905103, and eval EM 0.6186239620403321 at epoch 2
+11/14/2021 04:29:10 At epoch 3
+11/14/2021 04:29:41 Updates[  1700] train loss[610465.51263] train em[0.69767] f1[0.73608] remaining[1 day, 11:28:51]
+11/14/2021 04:32:06 Updates[  1800] train loss[681250.36209] train em[0.71562] f1[0.73934] remaining[5:58:32]
+11/14/2021 04:34:29 Updates[  1900] train loss[612500.40157] train em[0.69937] f1[0.72601] remaining[3:04:21]
+11/14/2021 04:36:56 Updates[  2000] train loss[693750.35201] train em[0.69375] f1[0.72581] remaining[1:57:11]
+11/14/2021 04:39:23 Updates[  2100] train loss[625000.42521] train em[0.70125] f1[0.73112] remaining[1:20:46]
+11/14/2021 04:41:51 Updates[  2200] train loss[612500.41598] train em[0.68750] f1[0.71730] remaining[0:57:22]
+11/14/2021 04:44:17 Updates[  2300] train loss[568750.40562] train em[0.72375] f1[0.75310] remaining[0:40:41]
+11/14/2021 04:46:42 Updates[  2400] train loss[543750.42921] train em[0.73375] f1[0.76059] remaining[0:27:56]
+11/14/2021 04:49:09 Updates[  2500] train loss[543750.35853] train em[0.73625] f1[0.75889] remaining[0:17:43]
+11/14/2021 04:50:51 Eval 3372 examples, result in epoch 3, eval loss 920001.2096320253, eval em 0.617141162514828 eval f1 0.6469128113879007.
+11/14/2021 04:50:51 At epoch 4
+11/14/2021 04:52:51 Updates[  2600] train loss[706687.06798] train em[0.74164] f1[0.76641] remaining[13:15:55]
+11/14/2021 04:55:17 Updates[  2700] train loss[556250.16707] train em[0.75438] f1[0.77970] remaining[5:33:36]
+11/14/2021 04:57:44 Updates[  2800] train loss[606250.21512] train em[0.73562] f1[0.76473] remaining[3:17:12]
+11/14/2021 05:00:11 Updates[  2900] train loss[531250.20529] train em[0.76250] f1[0.78812] remaining[2:10:53]
+11/14/2021 05:02:36 Updates[  3000] train loss[718750.25079] train em[0.72750] f1[0.75094] remaining[1:31:02]
+11/14/2021 05:05:04 Updates[  3100] train loss[518750.23874] train em[0.75250] f1[0.77666] remaining[1:04:04]
+11/14/2021 05:07:28 Updates[  3200] train loss[687500.14701] train em[0.73938] f1[0.76818] remaining[0:44:15]
+11/14/2021 05:09:54 Updates[  3300] train loss[625000.25720] train em[0.73562] f1[0.76066] remaining[0:28:54]
+11/14/2021 05:12:31 Eval 3372 examples, result in epoch 4, eval loss 920001.3389704551, eval em 0.6230723606168446 eval f1 0.6527520759193364.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 05:12:39 Best eval F1 0.6527520759193364, and eval EM 0.6230723606168446 at epoch 4
+11/14/2021 05:12:39 At epoch 5
+11/14/2021 05:13:42 Updates[  3400] train loss[595930.32575] train em[0.75872] f1[0.78545] remaining[1 day, 10:31:54]
+11/14/2021 05:16:06 Updates[  3500] train loss[650000.06633] train em[0.76250] f1[0.78569] remaining[9:36:19]
+11/14/2021 05:18:28 Updates[  3600] train loss[593750.12506] train em[0.77125] f1[0.79054] remaining[5:09:34]
+11/14/2021 05:20:55 Updates[  3700] train loss[525000.12753] train em[0.77000] f1[0.79113] remaining[3:17:09]
+11/14/2021 05:23:20 Updates[  3800] train loss[687500.06394] train em[0.77000] f1[0.79447] remaining[2:14:19]
+11/14/2021 05:25:46 Updates[  3900] train loss[637500.03084] train em[0.77812] f1[0.79811] remaining[1:33:45]
+11/14/2021 05:28:12 Updates[  4000] train loss[656250.02948] train em[0.76562] f1[0.78883] remaining[1:05:04]
+11/14/2021 05:30:38 Updates[  4100] train loss[637500.04081] train em[0.76938] f1[0.79515] remaining[0:43:26]
+11/14/2021 05:34:16 Eval 3372 examples, result in epoch 5, eval loss 920001.4845126659, eval em 0.622479240806643 eval f1 0.6537277580071179.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 05:34:24 Best eval F1 0.6537277580071179, and eval EM 0.622479240806643 at epoch 5
+11/14/2021 05:34:24 done training in 6555 seconds!
+11/14/2021 05:34:24 
+----------------------- Cross Validation with dev index: 3 -----------------------
+
+11/14/2021 05:34:24 Loading data...
+Load data from train_cv_0.pkl.
+Load data from train_cv_1.pkl.
+Load data from train_cv_2.pkl.
+Load data from train_cv_4.pkl.
+Load data size 13401.
+Load data from dev_cv_3.pkl.
+Load data size 3359.
+11/14/2021 05:34:38 Num update steps 4188!
+11/14/2021 05:34:38 Build bert model.
+11/14/2021 05:34:42 Build Drop model.
+11/14/2021 05:34:42 Build optimizer etc...
+11/14/2021 05:34:45 At epoch 1
+11/14/2021 05:34:46 Updates[     0] train loss[0.57246] train em[0.75000] f1[0.96500] remaining[0:17:18]
+11/14/2021 05:37:13 Updates[   100] train loss[532582.67790] train em[0.60025] f1[0.63699] remaining[0:23:16]
+11/14/2021 05:39:39 Updates[   200] train loss[700001.17340] train em[0.57875] f1[0.61246] remaining[0:20:44]
+11/14/2021 05:42:06 Updates[   300] train loss[606251.30033] train em[0.58000] f1[0.61485] remaining[0:18:16]
+11/14/2021 05:44:36 Updates[   400] train loss[637501.41120] train em[0.56812] f1[0.59971] remaining[0:15:54]
+11/14/2021 05:47:00 Updates[   500] train loss[650001.29102] train em[0.56437] f1[0.59763] remaining[0:13:23]
+11/14/2021 05:49:28 Updates[   600] train loss[631251.23741] train em[0.57125] f1[0.60291] remaining[0:10:57]
+11/14/2021 05:51:56 Updates[   700] train loss[643751.21462] train em[0.58188] f1[0.61677] remaining[0:08:30]
+11/14/2021 05:54:24 Updates[   800] train loss[600001.21066] train em[0.56937] f1[0.60299] remaining[0:06:03]
+11/14/2021 05:56:29 Eval 3359 examples, result in epoch 1, eval loss 747024.7093092413, eval em 0.6308425126525752 eval f1 0.6619618934206609.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 05:56:37 Best eval F1 0.6619618934206609, and eval EM 0.6308425126525752 at epoch 1
+11/14/2021 05:56:37 At epoch 2
+11/14/2021 05:58:10 Updates[   900] train loss[552209.68372] train em[0.64960] f1[0.67827] remaining[6:10:11]
+11/14/2021 06:00:37 Updates[  1000] train loss[706250.56333] train em[0.65563] f1[0.68391] remaining[2:21:02]
+11/14/2021 06:03:06 Updates[  1100] train loss[668750.70673] train em[0.64250] f1[0.67352] remaining[1:24:47]
+11/14/2021 06:05:34 Updates[  1200] train loss[587500.55673] train em[0.67563] f1[0.70606] remaining[0:58:14]
+11/14/2021 06:08:03 Updates[  1300] train loss[668750.72788] train em[0.63313] f1[0.66849] remaining[0:42:06]
+11/14/2021 06:10:28 Updates[  1400] train loss[625000.78560] train em[0.64687] f1[0.67684] remaining[0:30:46]
+11/14/2021 06:12:56 Updates[  1500] train loss[625000.71266] train em[0.65500] f1[0.68483] remaining[0:22:10]
+11/14/2021 06:15:26 Updates[  1600] train loss[568750.74416] train em[0.66687] f1[0.69842] remaining[0:15:11]
+11/14/2021 06:18:27 Eval 3359 examples, result in epoch 2, eval loss 747024.8098059425, eval em 0.6436439416493004 eval f1 0.6776540637094376.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 06:18:34 Best eval F1 0.6776540637094376, and eval EM 0.6436439416493004 at epoch 2
+11/14/2021 06:18:34 At epoch 3
+11/14/2021 06:19:12 Updates[  1700] train loss[790816.51208] train em[0.70408] f1[0.73477] remaining[1 day, 6:54:33]
+11/14/2021 06:21:40 Updates[  1800] train loss[650000.34530] train em[0.70875] f1[0.73498] remaining[5:47:32]
+11/14/2021 06:24:10 Updates[  1900] train loss[731250.31059] train em[0.69250] f1[0.71822] remaining[3:00:59]
+11/14/2021 06:26:34 Updates[  2000] train loss[600000.49860] train em[0.69375] f1[0.72403] remaining[1:55:21]
+11/14/2021 06:29:02 Updates[  2100] train loss[681250.41479] train em[0.70312] f1[0.73255] remaining[1:19:36]
+11/14/2021 06:31:30 Updates[  2200] train loss[506250.40790] train em[0.72375] f1[0.75666] remaining[0:56:31]
+11/14/2021 06:33:56 Updates[  2300] train loss[650000.39328] train em[0.71062] f1[0.73269] remaining[0:40:02]
+11/14/2021 06:36:25 Updates[  2400] train loss[675000.46614] train em[0.69063] f1[0.72271] remaining[0:27:26]
+11/14/2021 06:38:54 Updates[  2500] train loss[518750.43687] train em[0.72625] f1[0.74937] remaining[0:17:18]
+11/14/2021 06:40:22 Eval 3359 examples, result in epoch 3, eval loss 747024.9176422458, eval em 0.6370943733253944 eval f1 0.6733670735337904.
+11/14/2021 06:40:22 At epoch 4
+11/14/2021 06:42:32 Updates[  2600] train loss[734870.53408] train em[0.73055] f1[0.75614] remaining[12:30:17]
+11/14/2021 06:45:01 Updates[  2700] train loss[643750.18639] train em[0.74375] f1[0.77320] remaining[5:23:38]
+11/14/2021 06:47:29 Updates[  2800] train loss[700000.12154] train em[0.73062] f1[0.75511] remaining[3:12:47]
+11/14/2021 06:49:57 Updates[  2900] train loss[606250.20301] train em[0.73625] f1[0.76600] remaining[2:08:22]
+11/14/2021 06:52:23 Updates[  3000] train loss[550000.24263] train em[0.74500] f1[0.77017] remaining[1:29:21]
+11/14/2021 06:54:50 Updates[  3100] train loss[643750.22078] train em[0.73625] f1[0.76244] remaining[1:02:48]
+11/14/2021 06:57:18 Updates[  3200] train loss[575000.24143] train em[0.74000] f1[0.76427] remaining[0:43:17]
+11/14/2021 06:59:45 Updates[  3300] train loss[600000.24314] train em[0.75062] f1[0.77999] remaining[0:28:07]
+11/14/2021 07:02:10 Eval 3359 examples, result in epoch 4, eval loss 747025.0240669796, eval em 0.6481095564155999 eval f1 0.6822536469187261.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 07:02:18 Best eval F1 0.6822536469187261, and eval EM 0.6481095564155999 at epoch 4
+11/14/2021 07:02:18 At epoch 5
+11/14/2021 07:03:29 Updates[  3400] train loss[637755.12126] train em[0.78061] f1[0.80218] remaining[1 day, 6:06:56]
+11/14/2021 07:05:56 Updates[  3500] train loss[675000.07407] train em[0.75813] f1[0.77731] remaining[9:09:29]
+11/14/2021 07:08:21 Updates[  3600] train loss[587500.20732] train em[0.75375] f1[0.78332] remaining[4:59:58]
+11/14/2021 07:10:50 Updates[  3700] train loss[725000.09013] train em[0.75062] f1[0.77843] remaining[3:12:09]
+11/14/2021 07:13:19 Updates[  3800] train loss[556250.04706] train em[0.77875] f1[0.80286] remaining[2:11:15]
+11/14/2021 07:15:44 Updates[  3900] train loss[606250.07207] train em[0.77125] f1[0.79141] remaining[1:31:35]
+11/14/2021 07:18:10 Updates[  4000] train loss[675000.00058] train em[0.77687] f1[0.79655] remaining[1:03:25]
+11/14/2021 07:20:39 Updates[  4100] train loss[556250.09624] train em[0.77875] f1[0.80171] remaining[0:42:07]
+11/14/2021 07:23:57 Eval 3359 examples, result in epoch 5, eval loss 747025.1650896138, eval em 0.6540637094373325 eval f1 0.6880589461149154.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 07:24:05 Best eval F1 0.6880589461149154, and eval EM 0.6540637094373325 at epoch 5
+11/14/2021 07:24:05 done training in 6559 seconds!
+11/14/2021 07:24:05 
+----------------------- Cross Validation with dev index: 4 -----------------------
+
+11/14/2021 07:24:05 Loading data...
+Load data from train_cv_0.pkl.
+Load data from train_cv_1.pkl.
+Load data from train_cv_2.pkl.
+Load data from train_cv_3.pkl.
+Load data size 13397.
+Load data from dev_cv_4.pkl.
+Load data size 3376.
+11/14/2021 07:24:13 Num update steps 4187!
+11/14/2021 07:24:13 Build bert model.
+11/14/2021 07:24:17 Build Drop model.
+11/14/2021 07:24:17 Build optimizer etc...
+11/14/2021 07:24:17 At epoch 1
+11/14/2021 07:24:18 Updates[     0] train loss[0.58643] train em[0.75000] f1[0.75000] remaining[0:17:28]
+11/14/2021 07:26:42 Updates[   100] train loss[588973.75797] train em[0.59211] f1[0.62962] remaining[0:22:47]
+11/14/2021 07:29:06 Updates[   200] train loss[625001.19957] train em[0.57750] f1[0.60841] remaining[0:20:20]
+11/14/2021 07:31:34 Updates[   300] train loss[668751.28654] train em[0.54875] f1[0.58173] remaining[0:18:06]
+11/14/2021 07:34:00 Updates[   400] train loss[593751.22118] train em[0.57937] f1[0.61822] remaining[0:15:42]
+11/14/2021 07:36:27 Updates[   500] train loss[706251.07040] train em[0.58437] f1[0.61681] remaining[0:13:17]
+11/14/2021 07:38:52 Updates[   600] train loss[537501.15026] train em[0.61500] f1[0.64311] remaining[0:10:50]
+11/14/2021 07:41:15 Updates[   700] train loss[731251.09629] train em[0.57937] f1[0.61485] remaining[0:08:23]
+11/14/2021 07:43:42 Updates[   800] train loss[562501.21899] train em[0.57812] f1[0.61678] remaining[0:05:59]
+11/14/2021 07:45:50 Eval 3376 examples, result in epoch 1, eval loss 822486.3018276053, eval em 0.6104857819905213 eval f1 0.6432138625592415.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 07:45:58 Best eval F1 0.6432138625592415, and eval EM 0.6104857819905213 at epoch 1
+11/14/2021 07:45:58 At epoch 2
+11/14/2021 07:47:30 Updates[   900] train loss[650000.61868] train em[0.64800] f1[0.67949] remaining[6:05:22]
+11/14/2021 07:49:56 Updates[  1000] train loss[512500.85949] train em[0.64812] f1[0.67989] remaining[2:19:34]
+11/14/2021 07:52:21 Updates[  1100] train loss[662500.66680] train em[0.63750] f1[0.67086] remaining[1:23:49]
+11/14/2021 07:54:45 Updates[  1200] train loss[643750.64981] train em[0.65687] f1[0.68519] remaining[0:57:28]
+11/14/2021 07:57:10 Updates[  1300] train loss[612500.65227] train em[0.65687] f1[0.69430] remaining[0:41:32]
+11/14/2021 07:59:35 Updates[  1400] train loss[556250.65975] train em[0.68312] f1[0.71729] remaining[0:30:22]
+11/14/2021 08:01:58 Updates[  1500] train loss[618750.68556] train em[0.66187] f1[0.69728] remaining[0:21:51]
+11/14/2021 08:04:24 Updates[  1600] train loss[668750.58630] train em[0.66063] f1[0.69357] remaining[0:14:57]
+11/14/2021 08:07:27 Eval 3376 examples, result in epoch 2, eval loss 822486.3847846506, eval em 0.6241113744075829 eval f1 0.6558086492890993.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 08:07:35 Best eval F1 0.6558086492890993, and eval EM 0.6241113744075829 at epoch 2
+11/14/2021 08:07:35 At epoch 3
+11/14/2021 08:08:12 Updates[  1700] train loss[675000.24960] train em[0.71250] f1[0.74255] remaining[1 day, 5:54:32]
+11/14/2021 08:10:40 Updates[  1800] train loss[687500.27407] train em[0.72062] f1[0.74483] remaining[5:41:54]
+11/14/2021 08:13:03 Updates[  1900] train loss[606250.32511] train em[0.72813] f1[0.75371] remaining[2:58:03]
+11/14/2021 08:15:25 Updates[  2000] train loss[656250.41801] train em[0.70000] f1[0.72991] remaining[1:53:31]
+11/14/2021 08:17:50 Updates[  2100] train loss[525000.42438] train em[0.69875] f1[0.72971] remaining[1:18:19]
+11/14/2021 08:20:15 Updates[  2200] train loss[668750.30428] train em[0.72000] f1[0.74996] remaining[0:55:36]
+11/14/2021 08:22:41 Updates[  2300] train loss[512500.37793] train em[0.72250] f1[0.74944] remaining[0:39:23]
+11/14/2021 08:25:05 Updates[  2400] train loss[662500.42828] train em[0.70188] f1[0.73569] remaining[0:26:58]
+11/14/2021 08:27:29 Updates[  2500] train loss[662500.40501] train em[0.69312] f1[0.72289] remaining[0:16:59]
+11/14/2021 08:28:59 Eval 3376 examples, result in epoch 3, eval loss 822486.5898755039, eval em 0.6335900473933649 eval f1 0.6642209715639812.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 08:29:07 Best eval F1 0.6642209715639812, and eval EM 0.6335900473933649 at epoch 3
+11/14/2021 08:29:07 At epoch 4
+11/14/2021 08:31:15 Updates[  2600] train loss[542857.44015] train em[0.71786] f1[0.74899] remaining[12:14:05]
+11/14/2021 08:33:41 Updates[  2700] train loss[600000.13111] train em[0.75500] f1[0.78392] remaining[5:18:01]
+11/14/2021 08:36:06 Updates[  2800] train loss[643750.16439] train em[0.73062] f1[0.75837] remaining[3:09:37]
+11/14/2021 08:38:33 Updates[  2900] train loss[575000.24887] train em[0.74813] f1[0.77231] remaining[2:06:19]
+11/14/2021 08:41:01 Updates[  3000] train loss[637500.15538] train em[0.74438] f1[0.76859] remaining[1:28:00]
+11/14/2021 08:43:29 Updates[  3100] train loss[681250.17327] train em[0.73188] f1[0.76155] remaining[1:01:54]
+11/14/2021 08:45:54 Updates[  3200] train loss[625000.11208] train em[0.76187] f1[0.78601] remaining[0:42:38]
+11/14/2021 08:48:20 Updates[  3300] train loss[593750.14298] train em[0.76187] f1[0.78460] remaining[0:27:40]
+11/14/2021 08:50:46 Eval 3376 examples, result in epoch 4, eval loss 822486.687249099, eval em 0.6409952606635071 eval f1 0.671093009478673.
+model saved to ./numnet_plus_345_LR_5e-4_BLR_1.5e-5_WD_5e-5_BWD_0.01/checkpoint_best
+11/14/2021 08:50:54 Best eval F1 0.671093009478673, and eval EM 0.6409952606635071 at epoch 4
+11/14/2021 08:50:54 At epoch 5
+11/14/2021 08:52:07 Updates[  3400] train loss[612499.99422] train em[0.78750] f1[0.80925] remaining[1 day, 5:10:46]
+11/14/2021 08:54:32 Updates[  3500] train loss[581250.00435] train em[0.79250] f1[0.81069] remaining[8:59:28]
+11/14/2021 08:56:59 Updates[  3600] train loss[650000.04313] train em[0.76562] f1[0.78674] remaining[4:55:23]
+11/14/2021 08:59:22 Updates[  3700] train loss[568750.07540] train em[0.77563] f1[0.80286] remaining[3:09:16]
+11/14/2021 09:01:48 Updates[  3800] train loss[637500.05368] train em[0.76500] f1[0.78651] remaining[2:09:19]
+11/14/2021 09:04:14 Updates[  3900] train loss[618749.98741] train em[0.77687] f1[0.80097] remaining[1:30:15]
+11/14/2021 09:06:42 Updates[  4000] train loss[718750.04513] train em[0.76125] f1[0.78557] remaining[1:02:30]
+11/14/2021 09:09:09 Updates[  4100] train loss[587500.10613] train em[0.77125] f1[0.79212] remaining[0:41:29]
+11/14/2021 09:12:28 Eval 3376 examples, result in epoch 5, eval loss 822486.8247070928, eval em 0.6404028436018957 eval f1 0.6696356635071091.
+11/14/2021 09:12:28 done training in 6490 seconds!
+11/14/2021 09:12:28 
+Cross-validation is done, with average F1: 0.6656262434074691, and average EM: 0.6330321462279864
